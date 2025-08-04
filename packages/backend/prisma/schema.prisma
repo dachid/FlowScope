@@ -1,0 +1,341 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String?  @unique
+  name         String?
+  company      String?
+  passwordHash String
+  role         String   @default("developer")
+  isActive     Boolean  @default(true)
+  isEmailVerified Boolean @default(false)
+  emailVerificationToken String?
+  passwordResetToken String?
+  passwordResetExpires DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastActiveAt DateTime @default(now())
+  
+  // Relations
+  ownedProjects Project[] @relation("ProjectOwner")
+  teamMembers   TeamMember[]
+  promptVersions PromptVersion[]
+  sessions      Session[]
+  comments      Comment[]
+  annotations   Annotation[]
+  shareLinks    ShareLink[]
+  presenceRecords PresenceRecord[]
+  preferences   UserPreferences?
+  bookmarks     Bookmark[]
+  
+  @@map("users")
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  settings    String?  // JSON string for team settings
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  members  TeamMember[]
+  projects Project[]
+  
+  @@map("teams")
+}
+
+model TeamMember {
+  id       String   @id @default(cuid())
+  userId   String
+  teamId   String
+  role     String   @default("MEMBER") // OWNER, ADMIN, MEMBER, VIEWER
+  permissions String? // JSON string for specific permissions
+  joinedAt DateTime @default(now())
+  invitedBy String?
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, teamId])
+  @@map("team_members")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  teamId      String?
+  ownerId     String
+  settings    String?  // JSON string for ProjectSettings
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  owner      User        @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  team       Team?       @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  prompts    Prompt[]
+  sessions   Session[]
+  shareLinks ShareLink[]
+  comments   Comment[]
+  
+  @@map("projects")
+}
+
+model ShareLink {
+  id           String    @id @default(cuid())
+  shareToken   String    @unique
+  resourceType String    // "project", "session", "trace", "prompt"
+  resourceId   String
+  projectId    String?   // For permission checking
+  permissions  String    // JSON string for SharePermissions
+  password     String?   // Optional password protection
+  expiresAt    DateTime?
+  isActive     Boolean   @default(true)
+  accessCount  Int       @default(0)
+  createdBy    String
+  createdAt    DateTime  @default(now())
+  lastAccessedAt DateTime?
+  
+  // Relations
+  creator User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@map("share_links")
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  content    String
+  resourceType String // "session", "trace", "prompt", "project"
+  resourceId String
+  projectId  String?  // For permission checking
+  authorId   String
+  parentId   String?  // For threaded comments
+  isResolved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  // Relations
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  project  Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  parent   Comment?  @relation("CommentThread", fields: [parentId], references: [id], onDelete: Cascade)
+  children Comment[] @relation("CommentThread")
+  
+  @@map("comments")
+}
+
+model Annotation {
+  id         String   @id @default(cuid())
+  type       String   // "highlight", "note", "marker"
+  content    String?
+  position   String   // JSON string for position data
+  resourceType String // "session", "trace", "prompt"
+  resourceId String
+  authorId   String
+  color      String?  @default("#FFD700")
+  isVisible  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  // Relations
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@map("annotations")
+}
+
+model PresenceRecord {
+  id         String   @id @default(cuid())
+  userId     String
+  resourceType String // "session", "project"
+  resourceId String
+  status     String   @default("active") // "active", "idle", "offline"
+  cursor     String?  // JSON string for cursor position
+  selection  String?  // JSON string for current selection
+  lastSeen   DateTime @default(now())
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, resourceType, resourceId])
+  @@map("presence_records")
+}
+
+model Prompt {
+  id               String   @id @default(cuid())
+  name             String
+  description      String?
+  projectId        String
+  currentVersionId String?
+  isPublic         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  // Relations
+  project  Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versions PromptVersion[]
+  
+  @@map("prompts")
+}
+
+model PromptVersion {
+  id               String   @id @default(cuid())
+  promptId         String
+  version          String
+  content          String   // JSON string for PromptContent
+  parentVersionId  String?
+  createdAt        DateTime @default(now())
+  createdBy        String
+  message          String?
+  isActive         Boolean  @default(true)
+  tags             String?  // JSON string for version tags
+  
+  // Relations
+  prompt           Prompt           @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  creator          User             @relation(fields: [createdBy], references: [id])
+  chainExecutions  ChainExecution[]
+  parent           PromptVersion?   @relation("VersionHistory", fields: [parentVersionId], references: [id])
+  children         PromptVersion[]  @relation("VersionHistory")
+  
+  @@unique([promptId, version])
+  @@map("prompt_versions")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  name      String?
+  startTime DateTime @default(now())
+  endTime   DateTime?
+  status    String   @default("active")
+  metadata  String?  // JSON string
+  userId    String?
+  projectId String?
+  isShared  Boolean  @default(false)
+  
+  // Relations
+  user            User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project         Project?          @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  traces          TraceData[]
+  chainExecutions ChainExecution[]
+  
+  @@map("sessions")
+}
+
+model TraceData {
+  id        String   @id @default(uuid())
+  sessionId String   @map("session_id")
+  parentId  String?  @map("parent_id")
+  
+  // Enhanced fields for multi-language support
+  operation String                    // e.g., "llm_call", "retrieval", "chain_execution"
+  language  String   @default("javascript") // "javascript", "python", "go", etc.
+  framework String   @default("unknown")    // "langchain", "llamaindex", "custom"
+  
+  // Timing data
+  timestamp DateTime @default(now())
+  startTime DateTime @default(now()) @map("start_time")
+  endTime   DateTime? @map("end_time")
+  duration  Int?     // Calculated duration in milliseconds
+  
+  // Enhanced data storage (PostgreSQL JSON support)
+  data      Json     // Input/output data and parameters
+  metadata  Json?    // Framework-specific metadata, performance metrics
+  
+  // Status and error handling
+  status    String   @default("pending") // "pending", "success", "error"
+  error     String?  // Error message and stack trace if failed
+  
+  // Legacy fields (keeping for backward compatibility)
+  chainId   String   @default("unknown")
+  type      String   @default("trace")
+  
+  // Relations
+  session   Session      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  parent    TraceData?   @relation("TraceHierarchy", fields: [parentId], references: [id])
+  children  TraceData[]  @relation("TraceHierarchy")
+  bookmarks Bookmark[]
+
+  // Optimized indexes for common query patterns
+  @@index([sessionId, startTime(sort: Desc)], name: "idx_session_time")
+  @@index([status], name: "idx_status")
+  @@index([operation], name: "idx_operation")
+  @@index([language, framework], name: "idx_lang_framework")
+  @@index([parentId], name: "idx_parent_child")
+  @@index([timestamp], name: "idx_timestamp")
+  
+  @@map("trace_data")
+}
+
+model ChainExecution {
+  id                String    @id @default(cuid())
+  sessionId         String
+  promptId          String?
+  promptVersionId   String?
+  startTime         DateTime  @default(now())
+  endTime           DateTime?
+  status            String    @default("pending")
+  input             String    // JSON string
+  output            String?   // JSON string
+  error             String?
+  metadata          String?   // JSON string
+  tokenUsage        String?   // JSON string for token metrics
+  
+  // Relations
+  session       Session        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  promptVersion PromptVersion? @relation(fields: [promptVersionId], references: [id], onDelete: SetNull)
+  
+  @@map("chain_executions")
+}
+
+model UserPreferences {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  theme                   String   @default("auto")    // "light", "dark", "auto"
+  rightPanelTab           String   @default("details") // "details", "inspector", "metadata", "shared"
+  rightPanelCollapsed     Boolean  @default(false)
+  sidebarCollapsed        Boolean  @default(false)
+  autoOpenPanelOnNodeClick Boolean @default(true)
+  defaultSessionView      String   @default("grid")    // "grid", "list"
+  tracePageSize           Int      @default(25)
+  enableNotifications     Boolean  @default(true)
+  autoSave                Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_preferences")
+}
+
+model Bookmark {
+  id          String   @id @default(cuid())
+  userId      String
+  traceId     String
+  title       String
+  description String?
+  tags        String?  // JSON array of tags
+  color       String?  @default("#FFD700")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trace TraceData @relation(fields: [traceId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, traceId])
+  @@map("bookmarks")
+}

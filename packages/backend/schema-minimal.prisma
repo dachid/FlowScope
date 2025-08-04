@@ -1,0 +1,37 @@
+// Create a minimal Prisma schema to test what's causing the hang
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Minimal models to test
+model Session {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  // Simple relation
+  traces    TraceData[]
+  
+  @@map("sessions")
+}
+
+model TraceData {
+  id        String   @id @default(cuid())
+  sessionId String   @map("session_id")
+  timestamp DateTime @default(now())
+  data      Json     // Simple JSON field
+  status    String   @default("pending")
+  
+  // Simple relation
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@map("trace_data")
+}

@@ -1,0 +1,122 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.WebSocketTestClient = void 0;
+exports.runWebSocketTest = runWebSocketTest;
+const socket_io_client_1 = require("socket.io-client");
+// Simple test client to verify WebSocket functionality
+class WebSocketTestClient {
+    constructor() {
+        this.socket = null;
+        this.url = 'http://localhost:3001/debug';
+    }
+    async connect() {
+        return new Promise((resolve, reject) => {
+            this.socket = (0, socket_io_client_1.io)(this.url, {
+                transports: ['websocket', 'polling'],
+                timeout: 5000,
+            });
+            this.socket.on('connect', () => {
+                console.log('✅ Test client connected:', this.socket?.id);
+                resolve();
+            });
+            this.socket.on('connect_error', (error) => {
+                console.error('❌ Test client connection failed:', error);
+                reject(error);
+            });
+            // Listen for trace events
+            this.socket.on('new_trace', (trace) => {
+                console.log('📡 Received trace via WebSocket:', {
+                    id: trace.id,
+                    type: trace.type,
+                    sessionId: trace.sessionId,
+                    timestamp: new Date(trace.timestamp).toISOString(),
+                });
+            });
+            this.socket.on('session_joined', (data) => {
+                console.log('🔗 Joined session:', data);
+            });
+            this.socket.on('error', (error) => {
+                console.error('🚨 WebSocket error:', error);
+            });
+        });
+    }
+    joinSession(sessionId) {
+        if (!this.socket?.connected) {
+            throw new Error('Not connected to WebSocket server');
+        }
+        this.socket.emit('join_session', { sessionId });
+        console.log(`🎯 Joining session: ${sessionId}`);
+    }
+    sendTrace(trace) {
+        if (!this.socket?.connected) {
+            throw new Error('Not connected to WebSocket server');
+        }
+        this.socket.emit('trace_event', trace);
+        console.log(`📤 Sent trace: ${trace.id}`);
+    }
+    disconnect() {
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
+            console.log('👋 Test client disconnected');
+        }
+    }
+}
+exports.WebSocketTestClient = WebSocketTestClient;
+// Test function
+async function runWebSocketTest() {
+    const client = new WebSocketTestClient();
+    try {
+        console.log('🚀 Starting WebSocket test...');
+        // Connect to server
+        await client.connect();
+        // Join a test session
+        const sessionId = 'test-session-' + Date.now();
+        client.joinSession(sessionId);
+        // Wait a moment for session join
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Send some test traces
+        const testTraces = [
+            {
+                id: 'test-trace-1',
+                sessionId,
+                chainId: 'test-chain',
+                timestamp: Date.now(),
+                type: 'prompt',
+                status: 'completed',
+                data: {
+                    prompt: 'Hello, this is a test prompt',
+                    model: 'test-model',
+                },
+            },
+            {
+                id: 'test-trace-2',
+                sessionId,
+                chainId: 'test-chain',
+                timestamp: Date.now() + 1000,
+                type: 'response',
+                status: 'completed',
+                data: {
+                    response: 'This is a test response',
+                },
+            },
+        ];
+        for (const trace of testTraces) {
+            client.sendTrace(trace);
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        console.log('✅ WebSocket test completed successfully');
+        // Keep connection open for a bit to see responses
+        await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+    catch (error) {
+        console.error('❌ WebSocket test failed:', error);
+    }
+    finally {
+        client.disconnect();
+    }
+}
+// Run the test if this file is executed directly
+if (require.main === module) {
+    runWebSocketTest().catch(console.error);
+}

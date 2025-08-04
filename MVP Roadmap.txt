@@ -1,0 +1,201 @@
+---
+
+# 🚩 **FlowScope MVP Roadmap**
+
+This roadmap assumes an MVP delivered within approximately **12 weeks**.
+
+---
+
+## 📌 **Phase 1: Initialization & Setup (Weeks 1–2)**
+
+**Goal:**
+Set up foundational infrastructure, tools, and project scaffolding.
+
+### 🔧 **Tasks:**
+
+* **Infrastructure Setup**
+
+  * Initialize code repository (GitHub/GitLab)
+  * Configure CI/CD (GitHub Actions)
+  * Set up cloud environment (AWS, Supabase)
+  * Choose and configure project management tools (Jira, Notion)
+
+* **Frontend Boilerplate**
+
+  * Initialize React/TypeScript frontend (Vite or Next.js)
+  * Configure Tailwind CSS/Shadcn UI components
+  * Set up routing and state management
+
+* **Backend/API Boilerplate**
+
+  * Initialize NestJS backend with basic CRUD operations
+  * Database schema setup (PostgreSQL via Supabase)
+  * Setup Redis caching layer (optional)
+
+### 🎯 **Outcomes:**
+
+* Functional code repository
+* Initial architecture in place
+* Dev environments ready for rapid iteration
+
+---
+
+## 📌 **Phase 2: SDK & Framework Integrations (Weeks 3–5)**
+
+**Goal:**
+Establish foundational SDK to support at least two LLM frameworks (e.g., LangChain, LlamaIndex).
+
+### 🔧 **Tasks:**
+
+* **Cross-Framework SDK Design**
+
+  * Define SDK interface and functions clearly
+  * Build adapter pattern for framework integrations
+
+* **Framework Integration**
+
+  * Implement LangChain integration
+  * Implement LlamaIndex integration
+  * Test integrations thoroughly (unit tests, mock scenarios)
+
+* **Logging and Telemetry**
+
+  * SDK-side telemetry logging mechanism
+  * Capture prompt metadata, inputs/outputs, execution traces
+
+### 🎯 **Outcomes:**
+
+* SDK alpha release with at least 2 integrations
+* Basic logging and telemetry collection functional
+
+---
+
+## 📌 **Phase 3: Debugger Core & Prompt Versioning (Weeks 6–8)**
+
+**Goal:**
+Deliver core debugger functionalities: tracing, visualizations, and prompt versioning.
+
+### 🔧 **Tasks:**
+
+* **Visual Debugger UI**
+
+  * Build initial debugger UI (chain visualization, prompt outputs)
+  * Real-time visualization of chain executions and branches
+
+* **Prompt Versioning System**
+
+  * Git-like versioning (diff, branch, rollback)
+  * Database structure to store prompt history
+
+* **Real-time Trace Backend**
+
+  * Streamline backend APIs to support real-time frontend visualizations
+
+### 🎯 **Outcomes:**
+
+* Functional debugger interface
+* Prompt versioning and history tracking
+* Real-time tracing of LLM executions
+
+---
+
+## 📌 **Phase 4: Plugin Development (Weeks 9–10)**
+
+**Goal:**
+Extend FlowScope's functionality via VS Code and browser extensions.
+
+### 🔧 **Tasks:**
+
+* **VS Code Plugin**
+
+  * VS Code extension initialization (TypeScript)
+  * Integration with backend APIs
+  * Basic in-editor debugging and prompt previewing functionality
+
+* **Browser Extension**
+
+  * Chrome/Firefox browser extension initialization
+  * Basic SDK integration for web-based LLM playgrounds
+  * Prompt debugging and telemetry collection from browser contexts
+
+### 🎯 **Outcomes:**
+
+* VS Code and browser extensions functional
+* Improved developer experience within common developer environments
+
+---
+
+## 📌 **Phase 5: Team Collaboration & SaaS Dashboard (Weeks 11–12)**
+
+**Goal:**
+Enable team collaboration and SaaS-based delivery for wider user adoption.
+
+### 🔧 **Tasks:**
+
+* **Team Collaboration Features**
+
+  * Shareable debugging sessions (unique URLs)
+  * Commenting and tagging in the debugging UI
+  * Basic user authentication and permissions
+
+* **Cloud SaaS Dashboard**
+
+  * Deploy React frontend to cloud (AWS Amplify, Vercel)
+  * Backend deployment (AWS ECS/Fargate, Supabase)
+  * Setup user authentication and user/team management (Supabase Auth)
+
+* **Testing & Stabilization**
+
+  * Internal testing and bug fixing
+  * Performance optimization of dashboard and backend services
+
+### 🎯 **Outcomes:**
+
+* SaaS-based MVP deployed and accessible publicly
+* Collaboration features implemented
+* MVP stable and ready for early adopter feedback
+
+---
+
+## 🎖️ **Phase 6: Launch & Feedback Collection (End of Week 12)**
+
+**Goal:**
+Official MVP launch to collect feedback from initial users.
+
+### 🔧 **Tasks:**
+
+* **Public Launch**
+
+  * Launch MVP on Product Hunt, Hacker News, relevant forums, and developer communities
+  * Social media announcement (LinkedIn, Twitter/X, Reddit)
+
+* **Collecting User Feedback**
+
+  * Set up analytics tools for user behavior tracking (Mixpanel, Google Analytics)
+  * Implement simple feedback forms and support channels
+
+* **Early Support & Engagement**
+
+  * Monitor and respond to early adopters
+  * Prepare to iterate based on user feedback for next releases
+
+### 🎯 **Outcomes:**
+
+* Public MVP release successfully delivered
+* Initial feedback collected and documented
+* Early traction and visibility gained within developer communities
+
+---
+
+## 📅 **MVP Roadmap Summary**
+
+| Phase                  | Timeline     | Primary Outcome                           |
+| ---------------------- | ------------ | ----------------------------------------- |
+| Initialization & Setup | Weeks 1–2    | Foundation established                    |
+| SDK & Framework        | Weeks 3–5    | Cross-framework SDK ready                 |
+| Debugger Core          | Weeks 6–8    | Debugger & prompt versioning functional   |
+| Plugin Development     | Weeks 9–10   | Extensions developed for VS Code/browser  |
+| Collaboration & SaaS   | Weeks 11–12  | SaaS dashboard and team features launched |
+| MVP Launch             | End of Wk 12 | Public release & feedback collection      |
+
+---

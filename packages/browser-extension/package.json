@@ -1,0 +1,19 @@
+{
+  "name": "flowscope-browser-extension",
+  "version": "0.1.0",
+  "description": "FlowScope LLM Chain Debugger Browser Extension",
+  "scripts": {
+    "build": "echo 'Browser extension ready for packaging'",
+    "package": "zip -r flowscope-extension.zip . -x '*.git*' 'node_modules/*' 'package.json' 'README.md'",
+    "package-win": "powershell Compress-Archive -Path . -DestinationPath flowscope-extension.zip -Force"
+  },
+  "keywords": [
+    "llm",
+    "debugging",
+    "ai",
+    "browser-extension",
+    "chrome-extension"
+  ],
+  "author": "FlowScope Team",
+  "license": "MIT"
+}

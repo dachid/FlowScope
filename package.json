@@ -1,0 +1,35 @@
+{
+  "name": "flowscope",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LLM Chain Debugging and Observability Platform",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "lerna run dev --parallel",
+    "dev:backend": "cd packages/backend; npm run dev",
+    "dev:web": "cd packages/web-app; npm run dev",
+    "dev:shared": "cd packages/shared; npm run build -- --watch",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "clean": "lerna run clean; lerna clean --yes",
+    "bootstrap": "lerna bootstrap",
+    "setup": "npm install; npm run bootstrap"
+  },
+  "devDependencies": {
+    "lerna": "^8.1.8",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

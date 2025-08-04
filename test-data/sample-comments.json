@@ -1,0 +1,70 @@
+[
+  {
+    "id": "comment-1",
+    "projectId": "project-1",
+    "traceId": "trace-1",
+    "userId": "user-2",
+    "content": "This customer support response is excellent! The tone is empathetic and the information is comprehensive. Great job on including the tracking details.",
+    "createdAt": "2025-07-27T11:00:00Z",
+    "resolved": false,
+    "metadata": {
+      "type": "praise",
+      "lineNumber": null
+    }
+  },
+  {
+    "id": "comment-2",
+    "projectId": "project-1",
+    "traceId": "trace-2",
+    "userId": "user-3",
+    "content": "The order lookup tool is working perfectly. Response time of 800ms is within acceptable limits. ✅",
+    "createdAt": "2025-07-27T11:15:00Z",
+    "resolved": false,
+    "metadata": {
+      "type": "feedback",
+      "performanceMetric": "response_time"
+    }
+  },
+  {
+    "id": "comment-3",
+    "projectId": "project-2",
+    "traceId": "trace-4",
+    "userId": "user-1",
+    "content": "The code review suggestions are spot on. The early termination optimization is particularly valuable. Consider adding this pattern to our style guide.",
+    "createdAt": "2025-07-27T12:30:00Z",
+    "resolved": false,
+    "metadata": {
+      "type": "suggestion",
+      "category": "code_quality"
+    }
+  },
+  {
+    "id": "comment-4",
+    "projectId": "project-1",
+    "traceId": "trace-6",
+    "userId": "user-1",
+    "content": "We need to implement better retry logic for rate limit errors. This is affecting user experience.",
+    "createdAt": "2025-07-27T13:00:00Z",
+    "resolved": false,
+    "metadata": {
+      "type": "issue",
+      "priority": "high",
+      "category": "error_handling"
+    }
+  },
+  {
+    "id": "comment-5",
+    "projectId": "project-1",
+    "traceId": "trace-7",
+    "userId": "user-2",
+    "content": "✅ Fixed! Implemented exponential backoff retry. The second attempt succeeded after 65 seconds.",
+    "createdAt": "2025-07-27T13:05:00Z",
+    "resolved": true,
+    "resolvedAt": "2025-07-27T13:05:00Z",
+    "resolvedBy": "user-2",
+    "metadata": {
+      "type": "resolution",
+      "resolves": "comment-4"
+    }
+  }
+]

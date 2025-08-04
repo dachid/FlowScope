@@ -1,0 +1,65 @@
+[
+  {
+    "id": "share-1",
+    "projectId": "project-1",
+    "shareToken": "fs_demo_customer_support_2025",
+    "name": "Customer Support Demo Session",
+    "description": "Demo of customer support bot with order tracking functionality",
+    "createdBy": "user-1",
+    "createdAt": "2025-07-27T09:00:00Z",
+    "expiresAt": "2025-08-27T09:00:00Z",
+    "accessType": "view",
+    "isPublic": true,
+    "password": null,
+    "traceIds": ["trace-1", "trace-2", "trace-3"],
+    "accessCount": 23,
+    "lastAccessed": "2025-07-27T14:30:00Z",
+    "settings": {
+      "allowComments": true,
+      "showMetadata": true,
+      "downloadAllowed": false
+    }
+  },
+  {
+    "id": "share-2",
+    "projectId": "project-2",
+    "shareToken": "fs_demo_code_review_secure",
+    "name": "Code Review Assistant Demo",
+    "description": "Secure demo of AI-powered code review capabilities",
+    "createdBy": "user-2",
+    "createdAt": "2025-07-27T10:00:00Z",
+    "expiresAt": "2025-07-28T10:00:00Z",
+    "accessType": "view",
+    "isPublic": false,
+    "password": "demo123",
+    "traceIds": ["trace-4", "trace-5"],
+    "accessCount": 5,
+    "lastAccessed": "2025-07-27T13:15:00Z",
+    "settings": {
+      "allowComments": false,
+      "showMetadata": false,
+      "downloadAllowed": true
+    }
+  },
+  {
+    "id": "share-3",
+    "projectId": "project-1",
+    "shareToken": "fs_demo_error_handling",
+    "name": "Error Handling Examples",
+    "description": "Examples of error handling and retry mechanisms in LLM applications",
+    "createdBy": "user-1",
+    "createdAt": "2025-07-27T12:00:00Z",
+    "expiresAt": "2025-08-10T12:00:00Z",
+    "accessType": "comment",
+    "isPublic": true,
+    "password": null,
+    "traceIds": ["trace-6", "trace-7", "trace-8"],
+    "accessCount": 12,
+    "lastAccessed": "2025-07-27T14:00:00Z",
+    "settings": {
+      "allowComments": true,
+      "showMetadata": true,
+      "downloadAllowed": true
+    }
+  }
+]

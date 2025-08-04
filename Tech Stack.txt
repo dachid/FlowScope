@@ -1,0 +1,11 @@
+Frontend: React + TypeScript
+
+Backend: Node.js (NestJS), PostgreSQL (Supabase)
+
+Desktop: Electron
+
+VS Code Plugin: TypeScript VS Code API
+
+Browser Plugin: WebExtension API + React
+
+SDK/API: TypeScript & Python for easy integration with target frameworks.

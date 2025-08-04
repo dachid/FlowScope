@@ -1,0 +1,11 @@
+Great. Now let us begin phase 1 of the implementation plan. Keep the root folder as clean as possible, limit dependencies per package as they may be deployed separately in production.
+Ensure there are tests written (proper testing freamework) to test every functionality in the system.
+About naming conventions, do not use phased based nomenclature like (phase1,2 etc) when naming and building files and folders.
+
+Proceed to implement phase 1
+
+
+taskkill /F /IM node.exe
+Stop-Process -Name "node" -Force; npm run dev
+
+npx prisma studio --schema="C:\Users\charlesidu\Downloads\FlowScope\packages\backend\prisma\schema.prisma"

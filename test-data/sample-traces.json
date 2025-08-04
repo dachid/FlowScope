@@ -1,0 +1,220 @@
+[
+  {
+    "id": "trace-1",
+    "sessionId": "session-customer-support-demo",
+    "name": "Customer Support Bot Chain",
+    "type": "prompt",
+    "timestamp": "2025-07-27T10:30:00Z",
+    "data": {
+      "input": "I need help with my order #12345. It hasn't arrived yet and I placed it 2 weeks ago.",
+      "model": "gpt-4",
+      "temperature": 0.3,
+      "maxTokens": 150,
+      "systemPrompt": "You are a helpful customer support assistant. Always be empathetic and provide clear next steps."
+    },
+    "metadata": {
+      "framework": "LangChain",
+      "chainType": "ConversationChain",
+      "userId": "test-user-1",
+      "source": "web-chat"
+    },
+    "duration": 1200,
+    "status": "completed"
+  },
+  {
+    "id": "trace-2",
+    "sessionId": "session-customer-support-demo",
+    "name": "Order Lookup",
+    "type": "tool_call",
+    "timestamp": "2025-07-27T10:30:01Z",
+    "data": {
+      "toolName": "order_lookup",
+      "input": {
+        "orderId": "12345"
+      },
+      "output": {
+        "status": "shipped",
+        "trackingNumber": "1Z999AA1234567890",
+        "estimatedDelivery": "2025-07-29",
+        "carrier": "UPS"
+      }
+    },
+    "metadata": {
+      "parentId": "trace-1",
+      "toolType": "api_call"
+    },
+    "duration": 800,
+    "status": "completed"
+  },
+  {
+    "id": "trace-3",
+    "sessionId": "session-customer-support-demo",
+    "name": "Response Generation",
+    "type": "response",
+    "timestamp": "2025-07-27T10:30:02Z",
+    "data": {
+      "output": "I've looked up your order #12345 and I have good news! Your order has been shipped and is on its way to you. Here are the details:\n\n📦 Status: Shipped\n🚚 Carrier: UPS\n📋 Tracking Number: 1Z999AA1234567890\n📅 Estimated Delivery: July 29, 2025\n\nYou can track your package directly on the UPS website using the tracking number. If you don't receive it by the estimated date, please let me know and I'll investigate further for you!",
+      "tokensUsed": 120,
+      "cost": 0.0024
+    },
+    "metadata": {
+      "parentId": "trace-1",
+      "confidence": 0.95
+    },
+    "duration": 900,
+    "status": "completed"
+  },
+  {
+    "id": "trace-4",
+    "sessionId": "session-code-assistant-demo",
+    "name": "Code Review Assistant",
+    "type": "prompt",
+    "timestamp": "2025-07-27T11:15:00Z",
+    "data": {
+      "input": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n    return arr\n\nPlease review this code and suggest improvements.",
+      "model": "gpt-4",
+      "temperature": 0.1,
+      "systemPrompt": "You are a senior software engineer. Provide constructive code review feedback focusing on performance, readability, and best practices."
+    },
+    "metadata": {
+      "framework": "LlamaIndex",
+      "chainType": "QueryEngine",
+      "userId": "test-developer-1",
+      "codeLanguage": "python"
+    },
+    "duration": 1500,
+    "status": "completed"
+  },
+  {
+    "id": "trace-5",
+    "sessionId": "session-code-assistant-demo",
+    "name": "Code Analysis Response",
+    "type": "response",
+    "timestamp": "2025-07-27T11:15:01Z",
+    "data": {
+      "output": "Your bubble sort implementation is correct but has some areas for improvement:\n\n**Strengths:**\n✅ Correct algorithm implementation\n✅ Clear variable naming\n✅ Proper swapping logic\n\n**Suggestions for improvement:**\n1. **Optimization**: Add early termination when no swaps occur\n2. **Type hints**: Add type annotations for better code clarity\n3. **Docstring**: Add documentation explaining the function\n4. **Performance**: Consider using more efficient sorting algorithms for larger datasets\n\n**Improved version:**\n```python\nfrom typing import List\n\ndef bubble_sort(arr: List[int]) -> List[int]:\n    \"\"\"Sort array using bubble sort algorithm with early termination.\"\"\"\n    n = len(arr)\n    for i in range(n):\n        swapped = False\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n                swapped = True\n        if not swapped:\n            break  # Array is already sorted\n    return arr\n```",
+      "tokensUsed": 180,
+      "cost": 0.0036
+    },
+    "metadata": {
+      "parentId": "trace-4",
+      "codeReviewScore": 8.5
+    },
+    "duration": 1800,
+    "status": "completed"
+  },
+  {
+    "id": "trace-6",
+    "sessionId": "session-error-demo",
+    "name": "Failed API Call",
+    "type": "prompt",
+    "timestamp": "2025-07-27T12:00:00Z",
+    "data": {
+      "input": "Translate this text to French: 'Hello, how are you doing today?'",
+      "model": "gpt-4",
+      "temperature": 0.0
+    },
+    "metadata": {
+      "framework": "Custom",
+      "attemptNumber": 1
+    },
+    "duration": 5000,
+    "status": "failed",
+    "error": {
+      "type": "RateLimitError",
+      "message": "API rate limit exceeded. Please try again in 60 seconds.",
+      "code": 429,
+      "details": {
+        "retryAfter": 60,
+        "currentUsage": "100/100 requests per minute"
+      }
+    }
+  },
+  {
+    "id": "trace-7",
+    "sessionId": "session-error-demo",
+    "name": "Retry Translation",
+    "type": "prompt",
+    "timestamp": "2025-07-27T12:01:05Z",
+    "data": {
+      "input": "Translate this text to French: 'Hello, how are you doing today?'",
+      "model": "gpt-4",
+      "temperature": 0.0
+    },
+    "metadata": {
+      "framework": "Custom",
+      "attemptNumber": 2,
+      "retryOf": "trace-6"
+    },
+    "duration": 1100,
+    "status": "completed"
+  },
+  {
+    "id": "trace-8",
+    "sessionId": "session-error-demo",
+    "name": "Translation Response",
+    "type": "response",
+    "timestamp": "2025-07-27T12:01:06Z",
+    "data": {
+      "output": "Bonjour, comment allez-vous aujourd'hui ?",
+      "tokensUsed": 15,
+      "cost": 0.0003
+    },
+    "metadata": {
+      "parentId": "trace-7",
+      "translationQuality": "excellent"
+    },
+    "duration": 200,
+    "status": "completed"
+  },
+  {
+    "id": "trace-9",
+    "sessionId": "session-complex-chain-demo",
+    "name": "Document Analysis Chain",
+    "type": "prompt",
+    "timestamp": "2025-07-27T13:30:00Z",
+    "data": {
+      "input": "Analyze this research paper and provide a summary of key findings.",
+      "model": "gpt-4-turbo",
+      "systemPrompt": "You are a research analyst. Extract key insights and findings from academic papers.",
+      "documentContext": "Paper: 'Machine Learning in Healthcare: A Comprehensive Review'"
+    },
+    "metadata": {
+      "framework": "LangChain",
+      "chainType": "AnalysisChain",
+      "documentLength": 15000,
+      "userId": "test-researcher-1"
+    },
+    "duration": 3200,
+    "status": "completed"
+  },
+  {
+    "id": "trace-10",
+    "sessionId": "session-complex-chain-demo",
+    "name": "Key Points Extraction",
+    "type": "tool_call",
+    "timestamp": "2025-07-27T13:30:03Z",
+    "data": {
+      "toolName": "extract_key_points",
+      "input": {
+        "text": "Full paper content...",
+        "maxPoints": 5
+      },
+      "output": {
+        "keyPoints": [
+          "ML shows 85% accuracy improvement in diagnostic imaging",
+          "Predictive models reduce hospital readmissions by 23%",
+          "Privacy concerns remain the biggest adoption barrier",
+          "Integration costs average $2.3M per healthcare system",
+          "ROI typically achieved within 18-24 months"
+        ]
+      }
+    },
+    "metadata": {
+      "parentId": "trace-9",
+      "confidence": 0.92
+    },
+    "duration": 2100,
+    "status": "completed"
+  }
+]

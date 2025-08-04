@@ -1,0 +1,92 @@
+/* CSS styles injected into web pages by the content script */
+
+.flowscope-highlight {
+    background-color: rgba(37, 99, 235, 0.1) !important;
+    border: 1px solid rgba(37, 99, 235, 0.3) !important;
+    border-radius: 3px !important;
+}
+
+.flowscope-indicator {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    background: #2563eb !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    z-index: 10000 !important;
+    font-family: system-ui, -apple-system, sans-serif !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.flowscope-trace-marker {
+    position: absolute !important;
+    left: -20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 12px !important;
+    height: 12px !important;
+    background: #10b981 !important;
+    border-radius: 50% !important;
+    border: 2px solid white !important;
+    box-shadow: 0 0 0 2px #10b981 !important;
+    z-index: 9999 !important;
+}
+
+.flowscope-context-menu {
+    position: fixed !important;
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    padding: 4px 0 !important;
+    min-width: 180px !important;
+    z-index: 10001 !important;
+    font-family: system-ui, -apple-system, sans-serif !important;
+    font-size: 14px !important;
+}
+
+.flowscope-context-menu-item {
+    padding: 8px 16px !important;
+    cursor: pointer !important;
+    color: #374151 !important;
+    transition: background-color 0.2s !important;
+}
+
+.flowscope-context-menu-item:hover {
+    background-color: #f3f4f6 !important;
+}
+
+.flowscope-context-menu-separator {
+    height: 1px !important;
+    background: #e5e7eb !important;
+    margin: 4px 0 !important;
+}
+
+/* Platform-specific styles */
+
+/* ChatGPT */
+.flowscope-chatgpt-message {
+    position: relative !important;
+}
+
+/* Claude */
+.flowscope-claude-message {
+    position: relative !important;
+}
+
+/* Bard */
+.flowscope-bard-response {
+    position: relative !important;
+}
+
+/* Hugging Face */
+.flowscope-hf-input {
+    position: relative !important;
+}
+
+/* Replicate */
+.flowscope-replicate-form {
+    position: relative !important;
+}

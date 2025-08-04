@@ -1,0 +1,26 @@
+{
+  "traces": [
+    {
+      "id": "batch-test-1",
+      "sessionId": "batch-session",
+      "name": "Batch Test 1",
+      "type": "prompt",
+      "timestamp": "2025-07-27T21:10:00Z",
+      "data": {
+        "input": "First batch test"
+      },
+      "status": "completed"
+    },
+    {
+      "id": "batch-test-2",
+      "sessionId": "batch-session",
+      "name": "Batch Test 2",
+      "type": "response",
+      "timestamp": "2025-07-27T21:10:01Z",
+      "data": {
+        "output": "Response to first test"
+      },
+      "status": "completed"
+    }
+  ]
+}
