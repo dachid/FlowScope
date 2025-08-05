@@ -8,7 +8,7 @@
     "test": "node test-integration.js"
   },
   "dependencies": {
-    "@flowscope/sdk": "file:../../packages/sdk"
+    "@flowscope/sdk": "file:../../packages/javascript-sdk"
   },
   "keywords": [
     "flowscope",
