@@ -5,7 +5,8 @@
   "scripts": {
     "build": "echo 'Browser extension ready for packaging'",
     "package": "zip -r flowscope-extension.zip . -x '*.git*' 'node_modules/*' 'package.json' 'README.md'",
-    "package-win": "powershell Compress-Archive -Path . -DestinationPath flowscope-extension.zip -Force"
+    "package-win": "powershell Compress-Archive -Path . -DestinationPath flowscope-extension.zip -Force",
+    "test": "echo 'No tests specified for browser-extension' && exit 0"
   },
   "keywords": [
     "llm",

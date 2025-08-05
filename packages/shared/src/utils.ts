@@ -18,8 +18,9 @@ export function getCurrentTimestamp(): number {
  * Validates email format
  */
 export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  // More strict email validation that rejects consecutive dots
+  const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email) && !email.includes('..') && !email.includes('.-') && !email.includes('-.');
 }
 
 /**
