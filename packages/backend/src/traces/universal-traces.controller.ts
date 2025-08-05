@@ -1,74 +1,44 @@
-import { Controller, Post, Get, Body, Param, Query, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Query, HttpCode, HttpStatus, BadRequestException, Logger } from '@nestjs/common';
 import { WebSocketService } from '../websocket/websocket.service';
 import { UniversalTraceService } from './universal-trace.service';
-import type { TraceData } from '@flowscope/shared';
-import type { UniversalTraceData, TraceBatch } from '@flowscope/shared';
+import type { UniversalTraceData, TraceBatch, UniversalSession } from '@flowscope/shared';
 
 @Controller('traces')
-export class UniversalTracesController {
+export class TracesController {
+  private readonly logger = new Logger(TracesController.name);
+
   constructor(
     private readonly websocketService: WebSocketService,
     private readonly universalTraceService: UniversalTraceService
   ) {}
 
   /**
-   * Legacy trace endpoint for backward compatibility
+   * Primary trace endpoint - universal format only
    */
-  @Post('legacy')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createLegacyTrace(@Body() trace: TraceData) {
+  async submitTrace(@Body() trace: UniversalTraceData) {
     try {
-      // Convert legacy trace to universal format
-      const universalTrace = await this.universalTraceService.convertLegacyTrace(trace);
-      
-      // Process the universal trace
-      const result = await this.universalTraceService.processTrace(universalTrace);
-      
-      if (!result.success) {
-        throw new BadRequestException(`Trace processing failed: ${result.error}`);
-      }
-
-      // Broadcast to WebSocket clients (legacy format for compatibility)
-      await this.websocketService.broadcastTrace(trace);
-
-      return {
-        success: true,
-        message: 'Legacy trace converted and processed',
-        traceId: trace.id,
-        universalTraceId: result.processedTrace?.id,
-        validation: result.validation
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      throw new BadRequestException(errorMessage);
-    }
-  }
-
-  /**
-   * Universal trace endpoint - primary endpoint for new integrations
-   */
-  @Post('universal')
-  @HttpCode(HttpStatus.CREATED)
-  async createUniversalTrace(@Body() trace: UniversalTraceData) {
-    try {
+      this.logger.debug(`Processing trace: ${trace.id}`);
       const result = await this.universalTraceService.processTrace(trace);
       
       if (!result.success) {
         throw new BadRequestException(`Trace processing failed: ${result.error}`);
       }
 
-      // Broadcast to WebSocket clients (universal format)
+      // Broadcast to WebSocket clients
       await this.websocketService.broadcastUniversalTrace(result.processedTrace!);
 
       return {
         success: true,
-        message: 'Universal trace processed successfully',
+        message: 'Trace processed successfully',
         traceId: trace.id,
         validation: result.validation,
         warnings: result.validation.warnings
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Trace processing failed: ${errorMessage}`);
       throw new BadRequestException(errorMessage);
     }
   }
@@ -76,21 +46,21 @@ export class UniversalTracesController {
   /**
    * Batch processing endpoint for high-throughput scenarios
    */
-  @Post('universal/batch')
+  @Post('batch')
   @HttpCode(HttpStatus.CREATED)
-  async createUniversalTraceBatch(@Body() batch: TraceBatch) {
+  async submitBatch(@Body() batch: TraceBatch) {
     try {
+      this.logger.debug(`Processing trace batch with ${batch.traces.length} traces`);
       const result = await this.universalTraceService.processBatch(batch);
       
       // Broadcast successful traces
       if (result.processedCount > 0) {
-        // Get successfully processed traces and broadcast them
-        const successfulResults = result.results.filter(r => r.success);
+        const successfulResults = result.results.filter((r: any) => r.success);
         await this.websocketService.broadcastTraceBatchResult({
           batchId: batch.batch_id,
           processedCount: result.processedCount,
           failedCount: result.failedCount,
-          successfulTraceIds: successfulResults.map(r => r.traceId)
+          successfulTraceIds: successfulResults.map((r: any) => r.traceId)
         });
       }
 
@@ -105,78 +75,55 @@ export class UniversalTracesController {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Batch processing failed: ${errorMessage}`);
       throw new BadRequestException(errorMessage);
     }
   }
 
   /**
-   * Auto-detect and process traces (smart endpoint)
+   * Session processing endpoint
    */
-  @Post('auto')
+  @Post('session')
   @HttpCode(HttpStatus.CREATED)
-  async createAutoTrace(@Body() trace: any) {
+  async submitSession(@Body() session: UniversalSession) {
     try {
-      // Auto-detect if this is a legacy or universal trace
-      const isUniversal = this.isUniversalTraceFormat(trace);
+      this.logger.debug(`Processing session: ${session.sessionId}`);
+      const results = await this.universalTraceService.processSession(session);
       
-      if (isUniversal) {
-        return this.createUniversalTrace(trace as UniversalTraceData);
-      } else {
-        return this.createLegacyTrace(trace as TraceData);
+      const successfulResults = results.filter((r: any) => r.success);
+      
+      if (successfulResults.length > 0) {
+        await this.websocketService.broadcastSessionResult({
+          sessionId: session.sessionId,
+          processedCount: successfulResults.length,
+          failedCount: results.length - successfulResults.length,
+          traceIds: successfulResults.map((r: any) => r.traceId)
+        });
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      throw new BadRequestException(errorMessage);
-    }
-  }
 
-  /**
-   * Language detection endpoint
-   */
-  @Post('detect-language')
-  @HttpCode(HttpStatus.OK)
-  async detectLanguage(@Body() trace: any) {
-    try {
-      const detection = this.universalTraceService.detectLanguage(trace);
       return {
-        success: true,
-        detection
+        success: successfulResults.length > 0,
+        message: `Processed ${successfulResults.length}/${results.length} traces in session`,
+        sessionId: session.sessionId,
+        processedCount: successfulResults.length,
+        failedCount: results.length - successfulResults.length,
+        results
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Session processing failed: ${errorMessage}`);
       throw new BadRequestException(errorMessage);
     }
   }
 
   /**
-   * Get session traces with multi-language support
+   * Get session traces
    */
   @Get('session/:sessionId')
-  async getSessionTraces(
-    @Param('sessionId') sessionId: string,
-    @Query('format') format: 'legacy' | 'universal' = 'universal'
-  ) {
+  async getSessionTraces(@Param('sessionId') sessionId: string) {
     try {
       const sessionData = await this.universalTraceService.getSessionTraces(sessionId);
       
-      if (format === 'legacy') {
-        // Convert universal traces back to legacy format if requested
-        const legacyTraces = sessionData.traces.map(trace => 
-          // Implement conversion logic or use adapter
-          trace
-        );
-        
-        return {
-          success: true,
-          session: sessionData.session,
-          traces: legacyTraces,
-          stats: {
-            languages: sessionData.languageStats,
-            frameworks: sessionData.frameworkStats
-          }
-        };
-      }
-
       return {
         success: true,
         session: sessionData.session,
@@ -188,6 +135,7 @@ export class UniversalTracesController {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Session retrieval failed: ${errorMessage}`);
       throw new BadRequestException(errorMessage);
     }
   }
@@ -205,6 +153,7 @@ export class UniversalTracesController {
         throw new BadRequestException('traceIds array is required');
       }
 
+      this.logger.debug(`Correlating ${traceIds.length} traces`);
       const correlation = await this.universalTraceService.correlateTraces(traceIds);
       
       return {
@@ -213,32 +162,24 @@ export class UniversalTracesController {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Trace correlation failed: ${errorMessage}`);
       throw new BadRequestException(errorMessage);
     }
   }
 
   /**
-   * Health check for universal trace processing
+   * Health check for trace processing
    */
-  @Get('health/universal')
-  async getUniversalHealth() {
+  @Get('health')
+  async getHealth() {
     return {
       success: true,
-      message: 'Universal trace processing is healthy',
+      message: 'Trace processing service is healthy',
       version: '1.0',
+      protocol: 'Universal Trace Format v1.0',
       supportedLanguages: ['javascript', 'python', 'go', 'java', 'csharp', 'rust'],
       supportedFrameworks: ['langchain', 'llamaindex', 'custom', 'autogen', 'crewai', 'flowise'],
       timestamp: new Date().toISOString()
     };
-  }
-
-  private isUniversalTraceFormat(trace: any): boolean {
-    // Check for universal trace format indicators
-    return Boolean(
-      trace.protocol_version ||
-      trace.language ||
-      trace.start_time || // ISO format vs timestamp
-      trace.session_id !== undefined // vs sessionId
-    );
   }
 }

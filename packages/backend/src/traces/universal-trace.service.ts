@@ -116,6 +116,61 @@ export class UniversalTraceService {
   }
 
   /**
+   * Process a complete session with multiple traces
+   */
+  async processSession(session: UniversalSession): Promise<Array<{
+    success: boolean;
+    validation: ValidationResult;
+    processedTrace?: UniversalTraceData;
+    error?: string;
+    traceId: string;
+  }>> {
+    try {
+      const results: Array<{
+        success: boolean;
+        validation: ValidationResult;
+        processedTrace?: UniversalTraceData;
+        error?: string;
+        traceId: string;
+      }> = [];
+      
+      // Validate the session first
+      const sessionValidation = this.validator.validateSession(session);
+      
+      // Process each trace in the session
+      for (const trace of session.traces) {
+        // Ensure trace has session information
+        trace.session_id = session.sessionId;
+        trace.session_metadata = {
+          ...trace.session_metadata,
+          ...session.session_metadata
+        };
+        
+        const result = await this.processTrace(trace);
+        results.push({
+          ...result,
+          traceId: trace.id
+        });
+      }
+      
+      return results;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Session processing failed';
+      
+      return [{
+        success: false,
+        error: errorMessage,
+        traceId: session.sessionId,
+        validation: {
+          valid: false,
+          errors: [errorMessage],
+          warnings: []
+        }
+      }];
+    }
+  }
+
+  /**
    * Convert legacy trace to universal format
    */
   async convertLegacyTrace(legacyTrace: any): Promise<UniversalTraceData> {
@@ -245,11 +300,13 @@ export class UniversalTraceService {
   private async getSession(sessionId: string): Promise<UniversalSession> {
     // TODO: Implement database query
     return {
+      sessionId: sessionId,
       id: sessionId,
       start_time: new Date().toISOString(),
       status: 'active',
       language: 'javascript',
-      framework: 'custom'
+      framework: 'custom',
+      traces: [] // Empty for now, would be populated from DB
     };
   }
 

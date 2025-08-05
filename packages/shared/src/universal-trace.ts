@@ -23,6 +23,7 @@ export interface UniversalTraceData {
   input: any;
   output?: any;
   metadata?: Record<string, any>;
+  session_metadata?: Record<string, any>; // Session-level metadata
   
   // Status and error handling
   status: 'success' | 'error' | 'pending' | 'cancelled';
@@ -89,8 +90,10 @@ export interface TraceContext {
   custom_attributes?: Record<string, any>;
 }
 
+// Export UniversalSession interface
 export interface UniversalSession {
-  id: string;
+  sessionId: string; // Use consistent naming with traces
+  id: string; // Keep backward compatibility
   name?: string;
   start_time: string;
   end_time?: string;
@@ -99,6 +102,8 @@ export interface UniversalSession {
   framework: UniversalTraceData['framework'];
   context?: TraceContext;
   metadata?: Record<string, any>;
+  session_metadata?: Record<string, any>; // Session-specific metadata
+  traces: UniversalTraceData[]; // Traces in this session
   trace_count?: number;
   total_duration_ms?: number;
 }
