@@ -131,9 +131,5 @@ async function runWebSocketTest() {
   }
 }
 
-// Run the test if this file is executed directly
-if (require.main === module) {
-  runWebSocketTest().catch(console.error);
-}
-
+// Export for frontend usage
 export { WebSocketTestClient, runWebSocketTest };

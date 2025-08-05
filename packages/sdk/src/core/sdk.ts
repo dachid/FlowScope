@@ -331,6 +331,27 @@ export class FlowScopeSDK extends EventEmitter {
   }
   
   /**
+   * Get current session ID
+   */
+  public getCurrentSessionId(): string {
+    return this.currentSession?.id || 'default';
+  }
+  
+  /**
+   * Generate a unique trace ID
+   */
+  public generateTraceId(): string {
+    return uuidv4();
+  }
+  
+  /**
+   * Get current session
+   */
+  public getCurrentSession(): Session | undefined {
+    return this.currentSession;
+  }
+  
+  /**
    * Log debug information if debug mode is enabled
    */
   private debug(message: string, ...args: any[]): void {
