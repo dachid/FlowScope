@@ -36,20 +36,23 @@ let originalChains: any;
 let originalAgents: any;
 
 try {
-  originalLangChain = require('langchain');
+  // @ts-ignore - Optional peer dependency
+  originalLangChain = (eval('require')('langchain') as any);
 } catch (error) {
   console.warn('⚠️ FlowScope: LangChain not found, wrapper disabled');
   originalLangChain = {};
 }
 
 try {
-  originalChains = require('langchain/chains');
+  // @ts-ignore - Optional peer dependency
+  originalChains = (eval('require')('langchain/chains') as any);
 } catch (error) {
   originalChains = {};
 }
 
 try {
-  originalAgents = require('langchain/agents');
+  // @ts-ignore - Optional peer dependency
+  originalAgents = (eval('require')('langchain/agents') as any);
 } catch (error) {
   originalAgents = {};
 }
@@ -456,11 +459,11 @@ export class AgentExecutor extends (originalAgents.AgentExecutor || class {}) {
   }
 }
 
-// Re-export everything else from original LangChain
-export * from 'langchain';
-
 // Export SDK instance for advanced usage
 export { sdk as flowscope };
+
+// Note: LangChain integration is available as an optional peer dependency
+// Users can install 'langchain' separately to use advanced features
 
 // Export common LLM classes (most frequently used)
 export const {

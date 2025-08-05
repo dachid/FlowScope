@@ -17,7 +17,7 @@ let WebSocketService = class WebSocketService {
         this.websocketGateway = websocketGateway;
     }
     /**
-     * Broadcast a trace event to all connected clients in a session
+     * Broadcast a legacy trace event to all connected clients in a session
      */
     async broadcastTrace(trace) {
         try {
@@ -25,6 +25,19 @@ let WebSocketService = class WebSocketService {
         }
         catch (error) {
             console.error('Failed to broadcast trace:', error);
+        }
+    }
+    /**
+     * Broadcast a universal trace event to all connected clients in a session
+     */
+    async broadcastUniversalTrace(trace) {
+        try {
+            // Convert universal trace to legacy format for existing clients if needed
+            // For now, broadcast directly as universal trace
+            this.websocketGateway.broadcastTrace(trace);
+        }
+        catch (error) {
+            console.error('Failed to broadcast universal trace:', error);
         }
     }
     /**
@@ -36,6 +49,36 @@ let WebSocketService = class WebSocketService {
         }
         catch (error) {
             console.error('Failed to broadcast session update:', error);
+        }
+    }
+    /**
+     * Broadcast trace batch processing results
+     */
+    async broadcastTraceBatchResult(result) {
+        try {
+            this.websocketGateway.broadcastSessionUpdate('batch', {
+                type: 'batch_result',
+                ...result
+            });
+        }
+        catch (error) {
+            console.error('Failed to broadcast batch result:', error);
+        }
+    }
+    /**
+     * Broadcast session processing results
+     */
+    async broadcastSessionResult(result) {
+        try {
+            this.websocketGateway.broadcastSessionUpdate(result.sessionId, {
+                type: 'session_result',
+                processedCount: result.processedCount,
+                failedCount: result.failedCount,
+                traceIds: result.traceIds
+            });
+        }
+        catch (error) {
+            console.error('Failed to broadcast session result:', error);
         }
     }
     /**

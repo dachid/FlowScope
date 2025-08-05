@@ -73,6 +73,7 @@ export interface DebuggerStore {
   updateTrace: (id: string, updates: Partial<TraceData>) => void;
   deleteTrace: (id: string) => void;
   setTraces: (traces: TraceData[]) => void;
+  setFilteredTraces: (traces: TraceData[]) => void; // For advanced search component
   clearTraces: () => void; // Missing method from App.tsx
   
   setNodes: (nodes: NodeData[]) => void;
@@ -182,6 +183,8 @@ export const useDebuggerStore = create<DebuggerStore>((set, get) => ({
     set({ traces });
     get().applyFilters();
   },
+
+  setFilteredTraces: (traces) => set({ filteredTraces: traces }),
 
   clearTraces: () => set({ traces: [], filteredTraces: [] }),
 

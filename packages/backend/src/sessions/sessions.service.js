@@ -104,24 +104,29 @@ let SessionsService = class SessionsService {
         const traceData = await this.prisma.traceData.create({
             data: {
                 sessionId,
-                chainId: trace.chainId,
-                type: trace.type,
-                data: JSON.stringify(trace.data),
-                metadata: trace.metadata ? JSON.stringify(trace.metadata) : null,
+                operation: trace.type || 'unknown',
+                language: 'javascript',
+                framework: 'unknown',
+                data: trace.data, // Cast to any to handle unknown JSON
+                metadata: trace.metadata, // Cast to any to handle unknown JSON
                 parentId: trace.parentId,
                 duration: trace.duration,
                 status: trace.status || 'pending',
                 timestamp: trace.timestamp ? new Date(trace.timestamp) : new Date(),
+                startTime: trace.timestamp ? new Date(trace.timestamp) : new Date(),
+                endTime: trace.duration
+                    ? new Date((trace.timestamp || Date.now()) + trace.duration)
+                    : undefined,
             },
         });
         return {
             id: traceData.id,
             sessionId: traceData.sessionId,
-            chainId: traceData.chainId,
+            chainId: traceData.operation, // Map operation to chainId for backward compatibility
             timestamp: traceData.timestamp.getTime(),
-            type: traceData.type,
-            data: JSON.parse(traceData.data),
-            metadata: traceData.metadata ? JSON.parse(traceData.metadata) : undefined,
+            type: traceData.operation,
+            data: traceData.data,
+            metadata: traceData.metadata,
             parentId: traceData.parentId || undefined,
             duration: traceData.duration || undefined,
             status: traceData.status,
@@ -135,11 +140,11 @@ let SessionsService = class SessionsService {
         return traces.map(trace => ({
             id: trace.id,
             sessionId: trace.sessionId,
-            chainId: trace.chainId,
+            chainId: trace.operation, // Map operation to chainId for backward compatibility
             timestamp: trace.timestamp.getTime(),
-            type: trace.type,
-            data: JSON.parse(trace.data),
-            metadata: trace.metadata ? JSON.parse(trace.metadata) : undefined,
+            type: trace.operation,
+            data: trace.data,
+            metadata: trace.metadata,
             parentId: trace.parentId || undefined,
             duration: trace.duration || undefined,
             status: trace.status,

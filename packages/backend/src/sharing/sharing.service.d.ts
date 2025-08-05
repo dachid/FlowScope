@@ -64,14 +64,20 @@ export declare class SharingService {
             id: string;
         };
     } & {
+        error: string | null;
         id: string;
-        data: string;
+        data: import("packages/backend/prisma/generated/client/runtime/library").JsonValue;
+        language: string;
+        framework: string;
         status: string;
-        metadata: string | null;
+        type: string;
+        operation: string;
+        startTime: Date;
+        endTime: Date | null;
+        metadata: import("packages/backend/prisma/generated/client/runtime/library").JsonValue | null;
         timestamp: Date;
         sessionId: string;
         chainId: string;
-        type: string;
         parentId: string | null;
         duration: number | null;
     }) | ({
@@ -81,23 +87,29 @@ export declare class SharingService {
             description: string | null;
         } | null;
         traces: {
+            error: string | null;
             id: string;
-            data: string;
+            data: import("packages/backend/prisma/generated/client/runtime/library").JsonValue;
+            language: string;
+            framework: string;
             status: string;
-            metadata: string | null;
+            type: string;
+            operation: string;
+            startTime: Date;
+            endTime: Date | null;
+            metadata: import("packages/backend/prisma/generated/client/runtime/library").JsonValue | null;
             timestamp: Date;
             sessionId: string;
             chainId: string;
-            type: string;
             parentId: string | null;
             duration: number | null;
         }[];
     } & {
         name: string | null;
         id: string;
+        status: string;
         startTime: Date;
         endTime: Date | null;
-        status: string;
         metadata: string | null;
         userId: string | null;
         projectId: string | null;
@@ -110,9 +122,9 @@ export declare class SharingService {
         } & {
             name: string | null;
             id: string;
+            status: string;
             startTime: Date;
             endTime: Date | null;
-            status: string;
             metadata: string | null;
             userId: string | null;
             projectId: string | null;
@@ -142,13 +154,13 @@ export declare class SharingService {
             id: string;
             isActive: boolean;
             createdAt: Date;
+            tags: string | null;
             createdBy: string;
             promptId: string;
             version: string;
             content: string;
             parentVersionId: string | null;
             message: string | null;
-            tags: string | null;
         }[];
     } & {
         name: string;
@@ -219,14 +231,20 @@ export declare class SharingService {
             id: string;
         };
     } & {
+        error: string | null;
         id: string;
-        data: string;
+        data: import("packages/backend/prisma/generated/client/runtime/library").JsonValue;
+        language: string;
+        framework: string;
         status: string;
-        metadata: string | null;
+        type: string;
+        operation: string;
+        startTime: Date;
+        endTime: Date | null;
+        metadata: import("packages/backend/prisma/generated/client/runtime/library").JsonValue | null;
         timestamp: Date;
         sessionId: string;
         chainId: string;
-        type: string;
         parentId: string | null;
         duration: number | null;
     }) | ({
@@ -236,23 +254,29 @@ export declare class SharingService {
             description: string | null;
         } | null;
         traces: {
+            error: string | null;
             id: string;
-            data: string;
+            data: import("packages/backend/prisma/generated/client/runtime/library").JsonValue;
+            language: string;
+            framework: string;
             status: string;
-            metadata: string | null;
+            type: string;
+            operation: string;
+            startTime: Date;
+            endTime: Date | null;
+            metadata: import("packages/backend/prisma/generated/client/runtime/library").JsonValue | null;
             timestamp: Date;
             sessionId: string;
             chainId: string;
-            type: string;
             parentId: string | null;
             duration: number | null;
         }[];
     } & {
         name: string | null;
         id: string;
+        status: string;
         startTime: Date;
         endTime: Date | null;
-        status: string;
         metadata: string | null;
         userId: string | null;
         projectId: string | null;
@@ -265,9 +289,9 @@ export declare class SharingService {
         } & {
             name: string | null;
             id: string;
+            status: string;
             startTime: Date;
             endTime: Date | null;
-            status: string;
             metadata: string | null;
             userId: string | null;
             projectId: string | null;
@@ -297,13 +321,13 @@ export declare class SharingService {
             id: string;
             isActive: boolean;
             createdAt: Date;
+            tags: string | null;
             createdBy: string;
             promptId: string;
             version: string;
             content: string;
             parentVersionId: string | null;
             message: string | null;
-            tags: string | null;
         }[];
     } & {
         name: string;
@@ -328,14 +352,20 @@ export declare class SharingService {
                 id: string;
             };
         } & {
+            error: string | null;
             id: string;
-            data: string;
+            data: import("packages/backend/prisma/generated/client/runtime/library").JsonValue;
+            language: string;
+            framework: string;
             status: string;
-            metadata: string | null;
+            type: string;
+            operation: string;
+            startTime: Date;
+            endTime: Date | null;
+            metadata: import("packages/backend/prisma/generated/client/runtime/library").JsonValue | null;
             timestamp: Date;
             sessionId: string;
             chainId: string;
-            type: string;
             parentId: string | null;
             duration: number | null;
         }) | ({
@@ -345,23 +375,29 @@ export declare class SharingService {
                 description: string | null;
             } | null;
             traces: {
+                error: string | null;
                 id: string;
-                data: string;
+                data: import("packages/backend/prisma/generated/client/runtime/library").JsonValue;
+                language: string;
+                framework: string;
                 status: string;
-                metadata: string | null;
+                type: string;
+                operation: string;
+                startTime: Date;
+                endTime: Date | null;
+                metadata: import("packages/backend/prisma/generated/client/runtime/library").JsonValue | null;
                 timestamp: Date;
                 sessionId: string;
                 chainId: string;
-                type: string;
                 parentId: string | null;
                 duration: number | null;
             }[];
         } & {
             name: string | null;
             id: string;
+            status: string;
             startTime: Date;
             endTime: Date | null;
-            status: string;
             metadata: string | null;
             userId: string | null;
             projectId: string | null;
@@ -374,9 +410,9 @@ export declare class SharingService {
             } & {
                 name: string | null;
                 id: string;
+                status: string;
                 startTime: Date;
                 endTime: Date | null;
-                status: string;
                 metadata: string | null;
                 userId: string | null;
                 projectId: string | null;
@@ -406,13 +442,13 @@ export declare class SharingService {
                 id: string;
                 isActive: boolean;
                 createdAt: Date;
+                tags: string | null;
                 createdBy: string;
                 promptId: string;
                 version: string;
                 content: string;
                 parentVersionId: string | null;
                 message: string | null;
-                tags: string | null;
             }[];
         } & {
             name: string;

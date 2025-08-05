@@ -20,9 +20,9 @@ export declare class BookmarksController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        tags: string | null;
         userId: string;
         description: string | null;
-        tags: string | null;
         color: string | null;
         traceId: string;
         title: string;
@@ -31,9 +31,9 @@ export declare class BookmarksController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        tags: string | null;
         userId: string;
         description: string | null;
-        tags: string | null;
         color: string | null;
         traceId: string;
         title: string;
@@ -42,9 +42,9 @@ export declare class BookmarksController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        tags: string | null;
         userId: string;
         description: string | null;
-        tags: string | null;
         color: string | null;
         traceId: string;
         title: string;
@@ -56,9 +56,9 @@ export declare class BookmarksController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        tags: string | null;
         userId: string;
         description: string | null;
-        tags: string | null;
         color: string | null;
         traceId: string;
         title: string;
@@ -67,9 +67,9 @@ export declare class BookmarksController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        tags: string | null;
         userId: string;
         description: string | null;
-        tags: string | null;
         color: string | null;
         traceId: string;
         title: string;

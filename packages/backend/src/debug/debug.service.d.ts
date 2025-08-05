@@ -11,8 +11,8 @@ export declare class DebugService {
         sessions: {
             name: string | null;
             id: string;
-            startTime: Date;
             status: string;
+            startTime: Date;
         }[];
     }>;
     cleanupDuplicateSessions(): Promise<{

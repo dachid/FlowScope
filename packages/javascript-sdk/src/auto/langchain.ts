@@ -36,8 +36,9 @@ function patchLangChain() {
   if (isPatched) return;
   
   try {
-    // Try to require LangChain
-    const langchain = require('langchain');
+    // Try to require LangChain using dynamic loading
+    // @ts-ignore - Optional peer dependency
+    const langchain = (eval('require')('langchain') as any);
     originalLangChain = { ...langchain };
     
     // Patch key classes
@@ -413,7 +414,8 @@ function patchRetrievalQAChain(retrieval: any) {
 function patchAgentExecutor(langchain: any) {
   // Try to find AgentExecutor
   try {
-    const agents = require('langchain/agents');
+    // @ts-ignore - Optional peer dependency
+    const agents = (eval('require')('langchain/agents') as any);
     if (agents.AgentExecutor) {
       patchAgentExecutorClass(agents);
     }

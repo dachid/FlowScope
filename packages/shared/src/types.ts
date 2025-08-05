@@ -35,6 +35,9 @@ export interface TraceData {
   parentId?: string;
   duration?: number;
   status: TraceStatus;
+  // Phase 5 Professional Visualization extensions
+  executionTime?: number; // For performance analysis
+  error?: string; // Error details for failed traces
 }
 
 export type TraceEventType =
@@ -48,7 +51,7 @@ export type TraceEventType =
   | 'error'
   | 'warning';
 
-export type TraceStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
+export type TraceStatus = 'pending' | 'completed' | 'failed' | 'cancelled' | 'error';
 
 export interface Session {
   id: string;

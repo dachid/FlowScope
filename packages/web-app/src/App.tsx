@@ -1,4 +1,4 @@
-import { Menu, X, Grid, Clock, Bookmark, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, X, Grid, Clock, Bookmark, MessageCircle, ChevronLeft, ChevronRight, Settings, BarChart, Search, Download, Keyboard } from 'lucide-react';
 import ChainVisualization from './components/debugger/ChainVisualization';
 import { SidebarControls } from './components/debugger/SidebarControls';
 import { NodeDetail } from './components/debugger/NodeDetail';
@@ -11,6 +11,12 @@ import { WebSocketIndicator } from './components/WebSocketIndicator';
 import { useDebuggerStore } from './store/debugger';
 import type { UISession } from './store/debugger';
 import { useBookmarkStore } from './store/bookmarks';
+
+// Phase 5 Professional Visualization Components
+import { PerformanceMetrics } from './components/debugger/PerformanceMetrics';
+import { AdvancedSearch } from './components/debugger/AdvancedSearch';
+import { KeyboardShortcuts } from './components/debugger/KeyboardShortcuts';
+import { ExportOptions } from './components/debugger/ExportOptions';
 
 import { useWebSocket } from './hooks/useWebSocket';
 import { useUserPreferences } from './hooks/useUserPreferences';
@@ -71,8 +77,15 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoadingScenarios, setIsLoadingScenarios] = useState(false);
   
+  // Phase 5 Professional Visualization State
+  const [showPerformanceMetrics, setShowPerformanceMetrics] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  const [showToolsDropdown, setShowToolsDropdown] = useState(false);
+  
   // Use useRef to ensure loadExistingSessions only runs once (StrictMode-safe)
   const hasLoadedRef = useRef(false);
+  const toolsDropdownRef = useRef<HTMLDivElement>(null);
   
   // Notification system for main panel
   const [notification, setNotification] = useState<{
@@ -318,6 +331,20 @@ function App() {
     loadExistingSessions();
   }, []);
 
+  // Close tools dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target as Node)) {
+        setShowToolsDropdown(false);
+      }
+    };
+
+    if (showToolsDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showToolsDropdown]);
+
   const handleBookmarkTrace = (traceId: string) => {
     const trace = traces.find(t => t.id === traceId);
     if (trace) {
@@ -425,6 +452,59 @@ function App() {
                 </button>
               </div>
 
+              {/* Phase 5 Professional Tools Dropdown */}
+              <div className="relative" ref={toolsDropdownRef}>
+                <button
+                  onClick={() => setShowToolsDropdown(!showToolsDropdown)}
+                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
+                >
+                  <Settings className="w-4 h-4" />
+                  Tools
+                </button>
+                
+                {showToolsDropdown && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <div className="py-2">
+                      <button
+                        onClick={() => {
+                          setShowPerformanceMetrics(!showPerformanceMetrics);
+                          setShowToolsDropdown(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3"
+                      >
+                        <BarChart className="w-4 h-4" />
+                        Performance Metrics
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowAdvancedSearch(!showAdvancedSearch);
+                          setShowToolsDropdown(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3"
+                      >
+                        <Search className="w-4 h-4" />
+                        Advanced Search
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowExportOptions(!showExportOptions);
+                          setShowToolsDropdown(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3"
+                      >
+                        <Download className="w-4 h-4" />
+                        Export Options
+                      </button>
+                      <div className="border-t border-gray-100 my-1"></div>
+                      <div className="px-4 py-2 text-xs text-gray-500 flex items-center gap-2">
+                        <Keyboard className="w-3 h-3" />
+                        Keyboard shortcuts active
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <WebSocketIndicator 
                 status={status} 
                 onReconnect={connect}
@@ -477,6 +557,43 @@ function App() {
                     )}
                   </div>
                 </div>
+              </div>
+            )}
+            
+            {/* Phase 5 Professional Visualization Overlays */}
+            {showPerformanceMetrics && (
+              <div className="absolute top-4 left-4 z-40">
+                <PerformanceMetrics className="w-80" />
+                <button
+                  onClick={() => setShowPerformanceMetrics(false)}
+                  className="absolute top-2 right-2 p-1 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md hover:shadow-lg transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            
+            {showAdvancedSearch && (
+              <div className="absolute top-4 right-4 z-40">
+                <AdvancedSearch className="w-96" />
+                <button
+                  onClick={() => setShowAdvancedSearch(false)}
+                  className="absolute top-2 right-2 p-1 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md hover:shadow-lg transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            
+            {showExportOptions && (
+              <div className="absolute bottom-4 left-4 z-40">
+                <ExportOptions className="w-72" />
+                <button
+                  onClick={() => setShowExportOptions(false)}
+                  className="absolute top-2 right-2 p-1 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md hover:shadow-lg transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             )}
           </div>
@@ -676,6 +793,9 @@ function App() {
         isOpen={showTeamManagement} 
         onClose={() => setShowTeamManagement(false)} 
       />
+      
+      {/* Phase 5 Keyboard Shortcuts - Always Active */}
+      <KeyboardShortcuts />
     </div>
   );
 }
