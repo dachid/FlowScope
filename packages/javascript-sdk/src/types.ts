@@ -1,8 +1,39 @@
-// Re-export shared types for convenience
-export type { TraceData, FlowScopeConfig, TraceEventType } from '@flowscope/shared';
+// Core types for JavaScript SDK - Independent copy
+export interface TraceData {
+  id: string;
+  timestamp: number;
+  sessionId: string;
+  chainId: string;
+  type: TraceEventType;
+  data: unknown;
+  metadata?: Record<string, unknown>;
+  parentId?: string;
+  duration?: number;
+  status: TraceStatus;
+  executionTime?: number;
+  error?: string;
+}
 
-// Import types for local use
-import type { TraceData, FlowScopeConfig } from '@flowscope/shared';
+export type TraceEventType =
+  | 'chain_start'
+  | 'chain_end'
+  | 'prompt'
+  | 'response'
+  | 'function_call'
+  | 'tool_use'
+  | 'agent_step'
+  | 'error'
+  | 'warning';
+
+export type TraceStatus = 'pending' | 'completed' | 'failed' | 'cancelled' | 'error';
+
+export interface FlowScopeConfig {
+  apiUrl?: string;
+  apiKey?: string;
+  projectId?: string;
+  environment?: 'development' | 'staging' | 'production';
+  enableRealtime?: boolean;
+}
 
 // SDK-specific configuration
 export interface SDKConfig extends FlowScopeConfig {
