@@ -1,35 +1,60 @@
 import * as vscode from 'vscode';
 import { FlowScopeApiClient } from './services/apiClient';
-import { TraceData } from '@flowscope/shared';
+import { DesktopAppClient } from './services/desktopAppClient';
+import { TraceData } from './types';
 
 export class FlowScopeExtension {
     private apiClient: FlowScopeApiClient;
+    private desktopAppClient: DesktopAppClient;
     private isTracing: boolean = false;
     private currentTraceId: string | null = null;
+    private currentSessionId: string | null = null;
     private outputChannel: vscode.OutputChannel;
 
-    constructor(private context: vscode.ExtensionContext) {
+    constructor(private context: vscode.ExtensionContext, desktopAppClient?: DesktopAppClient) {
         this.apiClient = new FlowScopeApiClient();
+        this.desktopAppClient = desktopAppClient || new DesktopAppClient();
         this.outputChannel = vscode.window.createOutputChannel('FlowScope');
         
-        // Initialize connection to FlowScope backend
-        this.initializeConnection();
+        // Initialize connections
+        this.initializeConnections();
     }
 
-    private async initializeConnection() {
+    private async initializeConnections() {
+        // Try desktop app first (primary)
         try {
-            const config = vscode.workspace.getConfiguration('flowscope');
-            const serverUrl = config.get<string>('serverUrl') || 'http://localhost:3001';
+            await this.desktopAppClient.health();
+            this.outputChannel.appendLine('Connected to FlowScope Desktop App');
+            vscode.window.showInformationMessage('FlowScope: Connected to Desktop App');
             
-            await this.apiClient.connect(serverUrl);
-            this.outputChannel.appendLine(`Connected to FlowScope server at ${serverUrl}`);
+            // Set workspace if available
+            const workspacePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+            if (workspacePath) {
+                await this.desktopAppClient.setWorkspace(workspacePath);
+            }
             
-            vscode.window.showInformationMessage('FlowScope: Connected to backend server');
         } catch (error) {
-            this.outputChannel.appendLine(`Failed to connect to FlowScope server: ${error}`);
-            vscode.window.showWarningMessage(
-                'FlowScope: Could not connect to backend server. Please ensure the FlowScope backend is running.'
-            );
+            this.outputChannel.appendLine(`Desktop app not available: ${error}`);
+            
+            // Fall back to backend API (legacy)
+            try {
+                const config = vscode.workspace.getConfiguration('flowscope');
+                const serverUrl = config.get<string>('serverUrl') || 'http://localhost:31847';
+                
+                await this.apiClient.connect(serverUrl);
+                this.outputChannel.appendLine(`Connected to FlowScope backend at ${serverUrl}`);
+                vscode.window.showInformationMessage('FlowScope: Connected to backend server');
+            } catch (backendError) {
+                this.outputChannel.appendLine(`Failed to connect to any FlowScope service: ${backendError}`);
+                vscode.window.showWarningMessage(
+                    'FlowScope: Could not connect to Desktop App or backend. Please install and launch FlowScope Desktop.',
+                    'Install Desktop App'
+                ).then(action => {
+                    if (action === 'Install Desktop App') {
+                        this.desktopAppClient.promptDesktopAppInstall();
+                    }
+                });
+            }
         }
     }
 
@@ -93,11 +118,21 @@ export class FlowScopeExtension {
                 return;
             }
 
-            // Start a new tracing session
-            const sessionId = await this.apiClient.startTracingSession({
-                workspacePath: workspaceFolder.uri.fsPath,
-                timestamp: Date.now()
-            });
+            // Create session in desktop app if available
+            let sessionId: string;
+            if (this.desktopAppClient.isDesktopAppConnected()) {
+                sessionId = await this.desktopAppClient.createSession(
+                    `VS Code Session - ${new Date().toLocaleString()}`,
+                    workspaceFolder.uri.fsPath
+                );
+                this.currentSessionId = sessionId;
+            } else {
+                // Fall back to API client
+                sessionId = await this.apiClient.startTracingSession({
+                    workspacePath: workspaceFolder.uri.fsPath,
+                    timestamp: Date.now()
+                });
+            }
 
             this.isTracing = true;
             this.currentTraceId = sessionId;
@@ -262,11 +297,11 @@ export class FlowScopeExtension {
         
         // This is a simplified example - in practice, you'd need more sophisticated
         // logic to map trace data to editor positions
-        if (trace.metadata?.lineNumber !== undefined && typeof trace.metadata.lineNumber === 'number') {
-            const line = activeEditor.document.lineAt(trace.metadata.lineNumber);
+        if (trace.sourceLocation?.line !== undefined) {
+            const line = activeEditor.document.lineAt(trace.sourceLocation.line - 1); // Convert to 0-based
             decorations.push({
                 range: line.range,
-                hoverMessage: `FlowScope Trace: ${trace.type}\nTimestamp: ${new Date(trace.timestamp).toLocaleString()}`
+                hoverMessage: `FlowScope Trace: ${trace.operation}\nTimestamp: ${new Date(trace.startTime).toLocaleString()}`
             });
         }
 
@@ -459,8 +494,45 @@ export class FlowScopeExtension {
         `;
     }
 
+    /**
+     * Open desktop app
+     */
+    async openDesktopApp(): Promise<void> {
+        try {
+            await this.desktopAppClient.openDesktopApp();
+        } catch (error) {
+            this.outputChannel.appendLine(`Failed to open desktop app: ${error}`);
+        }
+    }
+
+    /**
+     * Focus trace in desktop app
+     */
+    async focusTrace(traceId: string): Promise<void> {
+        try {
+            await this.desktopAppClient.focusTrace(traceId);
+        } catch (error) {
+            this.outputChannel.appendLine(`Failed to focus trace: ${error}`);
+        }
+    }
+
+    /**
+     * Get desktop app client for provider access
+     */
+    getDesktopAppClient(): DesktopAppClient {
+        return this.desktopAppClient;
+    }
+
+    /**
+     * Check if desktop app is connected
+     */
+    isDesktopAppConnected(): boolean {
+        return this.desktopAppClient.isDesktopAppConnected();
+    }
+
     dispose(): void {
         this.outputChannel.dispose();
         this.apiClient.disconnect();
+        this.desktopAppClient.dispose();
     }
 }

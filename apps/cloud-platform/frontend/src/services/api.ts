@@ -1,4 +1,4 @@
-import type { Session, TraceData } from '@flowscope/shared';
+import type { Session, TraceData } from '../types';
 
 const API_BASE_URL = 'http://localhost:3001/api';
 

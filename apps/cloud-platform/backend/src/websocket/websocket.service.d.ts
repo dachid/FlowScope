@@ -1,5 +1,5 @@
 import { DebugWebSocketGateway } from '../websocket/websocket.gateway';
-import type { TraceData, UniversalTraceData } from '@flowscope/shared';
+import type { TraceData, UniversalTraceData } from '../types';
 export declare class WebSocketService {
     private readonly websocketGateway;
     constructor(websocketGateway: DebugWebSocketGateway);

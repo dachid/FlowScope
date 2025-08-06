@@ -1,32 +1,29 @@
 import * as vscode from 'vscode';
-import { FlowScopeApiClient } from '../services/apiClient';
-import { TraceData } from '@flowscope/shared';
+import { FlowScopeApiClient } from '../types';
+import { TraceData } from '../types';
 
 export class TraceTreeItem extends vscode.TreeItem {
     constructor(
         public readonly trace: TraceData,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
-        super(trace.type, collapsibleState);
+        super(trace.operation, collapsibleState);
         
         this.id = trace.id;
-        this.description = new Date(trace.timestamp).toLocaleString();
-        this.tooltip = `${trace.type} - ${this.description}`;
+        this.description = new Date(trace.startTime).toLocaleString();
+        this.tooltip = `${trace.operation} - ${this.description}`;
         this.contextValue = 'trace';
         
-        // Set icon based on trace type
-        switch (trace.type) {
-            case 'prompt':
-                this.iconPath = new vscode.ThemeIcon('comment');
-                break;
-            case 'response':
-                this.iconPath = new vscode.ThemeIcon('reply');
-                break;
-            case 'function_call':
-                this.iconPath = new vscode.ThemeIcon('symbol-function');
+        // Set icon based on trace status
+        switch (trace.status) {
+            case 'success':
+                this.iconPath = new vscode.ThemeIcon('check');
                 break;
             case 'error':
                 this.iconPath = new vscode.ThemeIcon('error');
+                break;
+            case 'pending':
+                this.iconPath = new vscode.ThemeIcon('loading~spin');
                 break;
             default:
                 this.iconPath = new vscode.ThemeIcon('circle-filled');

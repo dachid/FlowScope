@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../types';
 
 // Simple test client to verify WebSocket functionality
 class WebSocketTestClient {

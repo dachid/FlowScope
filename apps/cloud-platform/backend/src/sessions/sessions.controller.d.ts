@@ -1,6 +1,6 @@
 import { SessionsService } from './sessions.service';
 import { DebugService } from '../debug/debug.service';
-import type { Session, TraceData } from '@flowscope/shared';
+import type { Session, TraceData } from '../types';
 export declare class SessionsController {
     private sessionsService;
     private debugService;

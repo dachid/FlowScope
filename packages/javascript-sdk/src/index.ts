@@ -12,11 +12,8 @@ export { ConsoleTransport, HTTPTransport, WebSocketTransport } from './transport
 // Storage exports
 export { MemoryStorage, LocalStorage, FileStorage } from './storage';
 
-// Type exports
+// Type exports - all from local types
 export * from './types';
-
-// Re-export shared types for convenience
-export type { TraceData, FlowScopeConfig, TraceEventType } from '@flowscope/shared';
 
 // Default export for convenience
 export { FlowScopeSDK as default } from './core/sdk';

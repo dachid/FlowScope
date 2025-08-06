@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { FlowScopeApiClient } from '../services/apiClient';
+import { FlowScopeApiClient } from '../types';
 
 export class CodeLensProvider implements vscode.CodeLensProvider {
     private _onDidChangeCodeLenses: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();

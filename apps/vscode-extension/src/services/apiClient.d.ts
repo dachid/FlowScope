@@ -1,4 +1,4 @@
-import { TraceData } from '@flowscope/shared';
+import { TraceData } from '../types';
 export interface TracingSession {
     workspacePath: string;
     timestamp: number;

@@ -1,5 +1,5 @@
 import { BaseAdapter } from './base';
-import { TraceData } from '@flowscope/shared';
+import { TraceData } from '../types';
 
 /**
  * LlamaIndex integration adapter

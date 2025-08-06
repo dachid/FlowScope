@@ -13,7 +13,7 @@ import {
   Filter
 } from 'lucide-react';
 import { useDebuggerStore } from '../../store/debugger';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../../types';
 
 interface ExportModalProps {
   isOpen: boolean;

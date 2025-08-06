@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { WebSocketService } from '../websocket/websocket.service';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../types';
 
 @Controller('traces')
 export class TracesController {

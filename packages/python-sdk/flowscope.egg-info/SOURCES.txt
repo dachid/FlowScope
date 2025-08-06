@@ -1,0 +1,14 @@
+README.md
+setup.py
+flowscope/__init__.py
+flowscope/auto.py
+flowscope/context.py
+flowscope/core.py
+flowscope.egg-info/PKG-INFO
+flowscope.egg-info/SOURCES.txt
+flowscope.egg-info/dependency_links.txt
+flowscope.egg-info/entry_points.txt
+flowscope.egg-info/requires.txt
+flowscope.egg-info/top_level.txt
+flowscope/langchain/__init__.py
+flowscope/llamaindex/__init__.py

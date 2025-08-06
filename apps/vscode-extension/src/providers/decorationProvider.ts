@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { FlowScopeApiClient } from '../services/apiClient';
+import { FlowScopeApiClient } from '../types';
 
 export class DecorationProvider {
     private decorationType: vscode.TextEditorDecorationType;
@@ -28,11 +28,11 @@ export class DecorationProvider {
 
         // Get trace data and create decorations
         this.apiClient.getTrace(traceId).then(trace => {
-            if (trace && trace.metadata?.lineNumber !== undefined && typeof trace.metadata.lineNumber === 'number') {
-                const line = activeEditor.document.lineAt(trace.metadata.lineNumber);
+            if (trace && trace.sourceLocation?.line !== undefined) {
+                const line = activeEditor.document.lineAt(trace.sourceLocation.line - 1); // Convert to 0-based
                 const decoration: vscode.DecorationOptions = {
                     range: line.range,
-                    hoverMessage: `FlowScope Trace: ${trace.type}\nTimestamp: ${new Date(trace.timestamp).toLocaleString()}\nData: ${JSON.stringify(trace.data, null, 2)}`
+                    hoverMessage: `FlowScope Trace: ${trace.operation}\nTimestamp: ${new Date(trace.startTime).toLocaleString()}\nStatus: ${trace.status}\nData: ${JSON.stringify(trace.data, null, 2)}`
                 };
 
                 this.currentDecorations = [decoration];

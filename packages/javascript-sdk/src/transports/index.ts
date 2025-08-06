@@ -1,4 +1,4 @@
-import { TraceData } from '@flowscope/shared';
+import { TraceData } from '../types';
 import { Transport } from '../types';
 
 /**

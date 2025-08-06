@@ -1,5 +1,5 @@
 import { PrismaService } from '../database/prisma.service';
-import type { Session, TraceData } from '@flowscope/shared';
+import type { Session, TraceData } from '../types';
 export declare class SessionsService {
     private prisma;
     constructor(prisma: PrismaService);

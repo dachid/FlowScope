@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { DebugService } from '../debug/debug.service';
-import type { Session, TraceData } from '@flowscope/shared';
+import type { Session, TraceData } from '../types';
 
 @Controller('sessions')
 export class SessionsController {

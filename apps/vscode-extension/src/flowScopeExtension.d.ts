@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { TraceData } from '@flowscope/shared';
+import { TraceData } from './types';
 export declare class FlowScopeExtension {
     private context;
     private apiClient;

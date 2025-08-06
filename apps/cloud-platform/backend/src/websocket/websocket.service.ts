@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DebugWebSocketGateway } from '../websocket/websocket.gateway';
-import type { TraceData, UniversalTraceData } from '@flowscope/shared';
+import type { TraceData, UniversalTraceData } from '../types';
 
 @Injectable()
 export class WebSocketService {

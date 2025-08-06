@@ -1,11 +1,11 @@
 {
   "name": "flowscope",
   "displayName": "FlowScope Debugger",
-  "description": "LLM Chain Debugging and Observability for VS Code",
-  "version": "0.1.0",
+  "description": "Local-first LLM debugging and observability",
+  "version": "1.0.0",
   "publisher": "flowscope",
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Debuggers",
@@ -25,18 +25,12 @@
     "onLanguage:python",
     "onLanguage:typescript",
     "onLanguage:javascript",
-    "onCommand:flowscope.openDebugger",
-    "onCommand:flowscope.startTracing"
+    "workspaceContains:**/package.json",
+    "workspaceContains:**/requirements.txt"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "flowscope.openDebugger",
-        "title": "Open FlowScope Debugger",
-        "category": "FlowScope",
-        "icon": "$(debug-alt)"
-      },
       {
         "command": "flowscope.startTracing",
         "title": "Start Tracing",
@@ -50,16 +44,107 @@
         "icon": "$(stop)"
       },
       {
+        "command": "flowscope.viewTraces",
+        "title": "View Traces",
+        "category": "FlowScope",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "flowscope.clearTraces",
+        "title": "Clear Traces",
+        "category": "FlowScope",
+        "icon": "$(clear-all)"
+      },
+      {
         "command": "flowscope.refreshTraces",
         "title": "Refresh Traces",
         "category": "FlowScope",
         "icon": "$(refresh)"
       },
       {
-        "command": "flowscope.exportTrace",
-        "title": "Export Current Trace",
+        "command": "flowscope.connectDesktopApp",
+        "title": "Connect to Desktop App",
+        "category": "FlowScope",
+        "icon": "$(link)"
+      },
+      {
+        "command": "flowscope.disconnectDesktopApp",
+        "title": "Disconnect from Desktop App",
+        "category": "FlowScope",
+        "icon": "$(unlink)"
+      },
+      {
+        "command": "flowscope.openDesktopApp",
+        "title": "Open FlowScope Desktop",
+        "category": "FlowScope",
+        "icon": "$(window)"
+      },
+      {
+        "command": "flowscope.installDesktopApp",
+        "title": "Install FlowScope Desktop",
+        "category": "FlowScope",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "flowscope.setupWorkspace",
+        "title": "Setup Workspace",
+        "category": "FlowScope",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "flowscope.installSDK",
+        "title": "Install FlowScope SDK",
+        "category": "FlowScope",
+        "icon": "$(package)"
+      },
+      {
+        "command": "flowscope.analyzePerformance",
+        "title": "Analyze Performance",
+        "category": "FlowScope",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "flowscope.exportTraces",
+        "title": "Export Traces",
         "category": "FlowScope",
         "icon": "$(export)"
+      },
+      {
+        "command": "flowscope.showSettings",
+        "title": "FlowScope Settings",
+        "category": "FlowScope",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "flowscope.showQuickPick",
+        "title": "FlowScope Quick Actions",
+        "category": "FlowScope",
+        "icon": "$(list-selection)"
+      },
+      {
+        "command": "flowscope.showTraceDetails",
+        "title": "Show Trace Details",
+        "category": "FlowScope"
+      },
+      {
+        "command": "flowscope.viewLineTraces",
+        "title": "View Line Traces",
+        "category": "FlowScope"
+      },
+      {
+        "command": "flowscope.togglePanel",
+        "title": "Toggle FlowScope Panel",
+        "category": "FlowScope"
+      },
+      {
+        "command": "flowscope.openTrace",
+        "title": "Open Trace",
+        "category": "FlowScope"
+      },
+      {
+        "command": "flowscope.connectToDesktop",
+        "title": "Connect to Desktop",
+        "category": "FlowScope"
       }
     ],
     "viewsContainers": {
@@ -74,77 +159,200 @@
     "views": {
       "flowscope": [
         {
-          "id": "flowscope.traces",
-          "name": "Traces",
-          "when": "flowscope.enabled"
+          "id": "flowscopeExplorer",
+          "name": "FlowScope Explorer",
+          "when": "flowscope.enabled",
+          "icon": "$(pulse)"
         },
         {
-          "id": "flowscope.prompts",
-          "name": "Prompt Versions",
-          "when": "flowscope.enabled"
-        },
-        {
-          "id": "flowscope.bookmarks",
-          "name": "Bookmarks",
-          "when": "flowscope.enabled"
+          "id": "flowscopeFallback",
+          "type": "webview",
+          "name": "FlowScope Panel",
+          "when": "flowscope.enabled",
+          "icon": "$(dashboard)"
         }
       ]
     },
     "menus": {
-      "view/title": [
-        {
-          "command": "flowscope.refreshTraces",
-          "when": "view == flowscope.traces",
-          "group": "navigation"
-        },
+      "commandPalette": [
         {
           "command": "flowscope.startTracing",
-          "when": "view == flowscope.traces && !flowscope.tracing",
-          "group": "navigation"
+          "when": "true"
+        },
+        {
+          "command": "flowscope.stopTracing", 
+          "when": "true"
+        },
+        {
+          "command": "flowscope.viewTraces",
+          "when": "true"
+        },
+        {
+          "command": "flowscope.setupWorkspace",
+          "when": "true"
+        },
+        {
+          "command": "flowscope.installDesktopApp",
+          "when": "true"
+        },
+        {
+          "command": "flowscope.showQuickPick",
+          "when": "true"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "flowscope.startTracing",
+          "when": "view == flowscopeExplorer",
+          "group": "navigation@1"
         },
         {
           "command": "flowscope.stopTracing",
-          "when": "view == flowscope.traces && flowscope.tracing",
-          "group": "navigation"
+          "when": "view == flowscopeExplorer",
+          "group": "navigation@2"
+        },
+        {
+          "command": "flowscope.refreshTraces",
+          "when": "view == flowscopeExplorer",
+          "group": "navigation@3"
+        },
+        {
+          "command": "flowscope.clearTraces",
+          "when": "view == flowscopeExplorer",
+          "group": "navigation@4"
+        },
+        {
+          "command": "flowscope.connectDesktopApp",
+          "when": "view == flowscopeExplorer",
+          "group": "secondary@1"
+        },
+        {
+          "command": "flowscope.setupWorkspace",
+          "when": "view == flowscopeExplorer",
+          "group": "secondary@2"
         }
       ],
       "view/item/context": [
         {
-          "command": "flowscope.exportTrace",
-          "when": "view == flowscope.traces && viewItem == trace",
-          "group": "flowscope"
+          "command": "flowscope.showTraceDetails",
+          "when": "view == flowscopeExplorer && viewItem == trace",
+          "group": "flowscope@1"
+        },
+        {
+          "command": "flowscope.exportTraces",
+          "when": "view == flowscopeExplorer && viewItem == trace",
+          "group": "flowscope@2"
         }
       ],
       "editor/context": [
         {
-          "command": "flowscope.openDebugger",
+          "command": "flowscope.startTracing",
           "when": "resourceExtname == .py || resourceExtname == .ts || resourceExtname == .js",
-          "group": "flowscope"
+          "group": "flowscope@1"
+        },
+        {
+          "command": "flowscope.viewLineTraces",
+          "when": "resourceExtname == .py || resourceExtname == .ts || resourceExtname == .js",
+          "group": "flowscope@2"
         }
       ]
     },
+    "keybindings": [
+      {
+        "command": "flowscope.startTracing",
+        "key": "ctrl+shift+f t",
+        "mac": "cmd+shift+f t",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "flowscope.stopTracing",
+        "key": "ctrl+shift+f s",
+        "mac": "cmd+shift+f s",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "flowscope.viewTraces",
+        "key": "ctrl+shift+f v",
+        "mac": "cmd+shift+f v"
+      },
+      {
+        "command": "flowscope.showQuickPick",
+        "key": "ctrl+shift+f f",
+        "mac": "cmd+shift+f f"
+      }
+    ],
     "configuration": {
       "title": "FlowScope",
       "properties": {
-        "flowscope.serverUrl": {
-          "type": "string",
-          "default": "http://localhost:3001",
-          "description": "FlowScope backend server URL"
-        },
-        "flowscope.autoTrace": {
+        "flowscope.desktopApp.autoLaunch": {
           "type": "boolean",
           "default": false,
-          "description": "Automatically start tracing when opening Python/TypeScript files"
+          "description": "Automatically launch desktop app when starting traces"
         },
-        "flowscope.showInlineDecorations": {
+        "flowscope.desktopApp.port": {
+          "type": "number",
+          "default": 31847,
+          "description": "Port for desktop app communication"
+        },
+        "flowscope.desktopApp.autoConnect": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically connect to desktop app on startup"
+        },
+        "flowscope.traces.showInlineMetrics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show performance metrics inline in code"
+        },
+        "flowscope.traces.showInlineDecorations": {
           "type": "boolean",
           "default": true,
           "description": "Show inline debugging decorations in editor"
         },
-        "flowscope.enableCodeLens": {
+        "flowscope.traces.enableCodeLens": {
           "type": "boolean",
           "default": true,
           "description": "Enable CodeLens for FlowScope actions"
+        },
+        "flowscope.traces.autoCapture": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically start tracing when opening supported files"
+        },
+        "flowscope.traces.captureStdout": {
+          "type": "boolean",
+          "default": true,
+          "description": "Capture stdout/stderr in traces"
+        },
+        "flowscope.traces.captureEnvironment": {
+          "type": "boolean",
+          "default": true,
+          "description": "Capture environment variables in traces"
+        },
+        "flowscope.workspace.autoSetup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically setup FlowScope for detected frameworks"
+        },
+        "flowscope.workspace.autoInstrumentation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically create instrumentation files"
+        },
+        "flowscope.ui.showWelcomeMessage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show welcome message for new users"
+        },
+        "flowscope.ui.fallbackUIEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable fallback UI when desktop app is not available"
+        },
+        "flowscope.serverUrl": {
+          "type": "string",
+          "default": "http://localhost:31847",
+          "description": "FlowScope desktop app API URL"
         }
       }
     }
@@ -160,22 +368,26 @@
     "package": "vsce package"
   },
   "devDependencies": {
-    "@types/node": "16.x",
-    "@types/vscode": "^1.60.0",
+    "@types/glob": "^9.0.0",
+    "@types/jest": "^29.5.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.85.0",
+    "@types/ws": "^8.5.0",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
     "@vscode/test-electron": "^2.2.0",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.0",
-    "typescript": "^4.9.4",
-    "vsce": "^2.15.0",
     "jest": "^29.5.0",
-    "@types/jest": "^29.5.0"
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.0",
+    "vsce": "^2.15.0"
   },
   "dependencies": {
     "axios": "^1.6.0",
+    "node-fetch": "^3.3.0",
     "ws": "^8.14.0"
   }
 }

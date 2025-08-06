@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../types';
 
 interface SocketSession {
   id: string;

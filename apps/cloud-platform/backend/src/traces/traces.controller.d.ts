@@ -1,5 +1,5 @@
 import { WebSocketService } from '../websocket/websocket.service';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../types';
 export declare class TracesController {
     private readonly websocketService;
     constructor(websocketService: WebSocketService);

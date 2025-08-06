@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDebuggerStore } from '../../store/debugger';
-import type { TraceStatus } from '@flowscope/shared';
+import type { TraceStatus } from '../../types';
 
 interface SearchFilters {
   searchTerm: string;

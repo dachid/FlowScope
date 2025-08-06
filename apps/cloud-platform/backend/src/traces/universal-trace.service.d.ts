@@ -1,4 +1,4 @@
-import { UniversalTraceData, UniversalSession, TraceBatch, ValidationResult } from '@flowscope/shared';
+import { UniversalTraceData, UniversalSession, TraceBatch, ValidationResult } from '../types';
 export declare class UniversalTraceService {
     private readonly validator;
     /**
@@ -41,7 +41,7 @@ export declare class UniversalTraceService {
     /**
      * Auto-detect language from trace data
      */
-    detectLanguage(trace: any): import("@flowscope/shared").LanguageDetectionResult;
+    detectLanguage(trace: any): import("../types").LanguageDetectionResult;
     /**
      * Get traces by session with language correlation
      */

@@ -1,6 +1,8 @@
 // Cloud Platform Frontend Types
 // Independent type definitions for the SaaS frontend
 
+export type TraceStatus = 'pending' | 'success' | 'error' | 'timeout';
+
 export interface User {
   id: string;
   email: string;

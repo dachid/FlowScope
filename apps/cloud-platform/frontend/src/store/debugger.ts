@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import type { Node, Edge } from '@xyflow/react';
-import type { Session, TraceData } from '@flowscope/shared';
+import type { Session, TraceData } from '../types';
 
-// Export the shared types for components
-export type { Session, TraceData as Trace } from '@flowscope/shared';
+// Export the local types for components
+export type { Session, TraceData as Trace } from '../types';
 
 // Extended session interface for UI with computed properties
 export interface UISession extends Session {

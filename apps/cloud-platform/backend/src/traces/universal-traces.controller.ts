@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Body, Param, Query, HttpCode, HttpStatus, BadRequestException, Logger } from '@nestjs/common';
 import { WebSocketService } from '../websocket/websocket.service';
 import { UniversalTraceService } from './universal-trace.service';
-import type { UniversalTraceData, TraceBatch, UniversalSession } from '@flowscope/shared';
+import type { UniversalTraceData, TraceBatch, UniversalSession } from '../types';
 
 @Controller('traces')
 export class TracesController {

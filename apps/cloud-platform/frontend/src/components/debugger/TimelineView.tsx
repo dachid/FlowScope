@@ -11,7 +11,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { useDebuggerStore } from '../../store/debugger';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../../types';
 
 interface TimelineViewProps {
   onSelectTrace?: (trace: TraceData) => void;

@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
-import { TraceData } from '@flowscope/shared';
+import { TraceData } from '../types';
 import { 
   SDKConfig, 
   Session, 

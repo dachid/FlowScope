@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { FlowScopeApiClient } from '../services/apiClient';
-import { TraceData } from '@flowscope/shared';
+import { TraceData } from '../types';
 export declare class TraceTreeItem extends vscode.TreeItem {
     readonly trace: TraceData;
     readonly collapsibleState: vscode.TreeItemCollapsibleState;

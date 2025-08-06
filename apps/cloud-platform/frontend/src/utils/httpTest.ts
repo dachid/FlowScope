@@ -1,4 +1,4 @@
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../types';
 
 // Test function to send traces via HTTP API
 export async function testHttpTraceAPI() {

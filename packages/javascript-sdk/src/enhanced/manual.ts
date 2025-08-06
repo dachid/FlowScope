@@ -10,7 +10,7 @@
 
 import { FlowScopeSDK } from '../core/sdk';
 import { HTTPTransport, ConsoleTransport } from '../transports';
-import { TraceData, TraceEventType, TraceStatus } from '@flowscope/shared';
+import { TraceData, TraceEventType, TraceStatus } from '../types';
 
 // Initialize enhanced SDK
 const sdk = new FlowScopeSDK({

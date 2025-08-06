@@ -15,7 +15,7 @@ import {
   ChevronRight,
   ChevronDown
 } from 'lucide-react';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../../types';
 
 interface TraceInspectorProps {
   trace: TraceData;

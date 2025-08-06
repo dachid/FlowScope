@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import WebSocket from 'ws';
-import { TraceData } from '@flowscope/shared';
+import { TraceData, FlowScopeApiClient as IFlowScopeApiClient, HealthResponse } from '../types';
 
 export interface TracingSession {
     workspacePath: string;
@@ -20,11 +20,97 @@ export interface Bookmark {
     timestamp: number;
 }
 
-export class FlowScopeApiClient {
+export class FlowScopeApiClient implements IFlowScopeApiClient {
     private httpClient: AxiosInstance | null = null;
     private wsClient: WebSocket | null = null;
     private serverUrl: string = '';
     private tracesUpdateCallbacks: ((traces: TraceData[]) => void)[] = [];
+
+    async health(): Promise<HealthResponse> {
+        if (!this.httpClient) {
+            throw new Error('Not connected to server');
+        }
+
+        const response = await this.httpClient.get('/health');
+        return response.data;
+    }
+
+    async addTrace(trace: TraceData): Promise<void> {
+        if (!this.httpClient) {
+            throw new Error('Not connected to server');
+        }
+
+        await this.httpClient.post('/api/traces', trace);
+    }
+
+    async updateTrace(traceId: string, updates: Partial<TraceData>): Promise<void> {
+        if (!this.httpClient) {
+            throw new Error('Not connected to server');
+        }
+
+        await this.httpClient.put(`/api/traces/${traceId}`, updates);
+    }
+
+    async getTraces(sessionId?: string, limit = 100, offset = 0): Promise<TraceData[]> {
+        if (!this.httpClient) {
+            throw new Error('Not connected to server');
+        }
+
+        const url = sessionId 
+            ? `/api/sessions/${sessionId}/traces?limit=${limit}&offset=${offset}`
+            : `/api/traces?limit=${limit}&offset=${offset}`;
+        
+        const response = await this.httpClient.get(url);
+        return response.data.data || response.data || [];
+    }
+
+    async setWorkspace(workspacePath: string): Promise<void> {
+        if (!this.httpClient) {
+            throw new Error('Not connected to server');
+        }
+
+        await this.httpClient.post('/api/workspace', { path: workspacePath });
+    }
+
+    async focusTrace(traceId: string): Promise<void> {
+        if (!this.httpClient) {
+            throw new Error('Not connected to server');
+        }
+
+        await this.httpClient.post(`/api/focus/${traceId}`);
+    }
+
+    async createSession(name: string, workspacePath?: string): Promise<string> {
+        if (!this.httpClient) {
+            throw new Error('Not connected to server');
+        }
+
+        const sessionData = {
+            name,
+            workspace_path: workspacePath,
+            start_time: Date.now(),
+            status: 'active'
+        };
+
+        const response = await this.httpClient.post('/api/sessions', sessionData);
+        return response.data.data?.id || response.data.sessionId;
+    }
+
+    isDesktopAppConnected(): boolean {
+        return this.httpClient !== null;
+    }
+
+    async openDesktopApp(): Promise<void> {
+        // This would be implemented to launch the desktop app
+        // For now, just attempt to connect
+        if (!this.httpClient) {
+            throw new Error('Desktop app not available');
+        }
+    }
+
+    dispose(): void {
+        this.disconnect();
+    }
 
     async connect(serverUrl: string): Promise<void> {
         this.serverUrl = serverUrl;
@@ -97,15 +183,6 @@ export class FlowScopeApiClient {
         }
 
         await this.httpClient.delete(`/api/traces/sessions/${sessionId}`);
-    }
-
-    async getTraces(): Promise<TraceData[]> {
-        if (!this.httpClient) {
-            throw new Error('Not connected to server');
-        }
-
-        const response = await this.httpClient.get('/api/traces');
-        return response.data;
     }
 
     async getTrace(traceId: string): Promise<TraceData | null> {

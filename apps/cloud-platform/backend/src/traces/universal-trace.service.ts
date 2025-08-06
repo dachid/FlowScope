@@ -5,8 +5,14 @@ import {
   TraceBatch,
   ValidationResult,
   UniversalTraceValidator 
-} from '@flowscope/shared';
-import { traceValidator, languageDetector, legacyTraceAdapter } from '@flowscope/shared';
+import {
+  UniversalTraceData,
+  UniversalSession,
+  TraceBatch,
+  ValidationResult,
+  LanguageDetectionResult
+} from '../types';
+import { traceValidator, languageDetector, legacyTraceAdapter } from '../utils';
 
 @Injectable()
 export class UniversalTraceService {

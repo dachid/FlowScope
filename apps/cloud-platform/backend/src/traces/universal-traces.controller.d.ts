@@ -1,6 +1,6 @@
 import { WebSocketService } from '../websocket/websocket.service';
 import { UniversalTraceService } from './universal-trace.service';
-import type { UniversalTraceData, TraceBatch, UniversalSession } from '@flowscope/shared';
+import type { UniversalTraceData, TraceBatch, UniversalSession } from '../types';
 export declare class TracesController {
     private readonly websocketService;
     private readonly universalTraceService;
@@ -13,7 +13,7 @@ export declare class TracesController {
         success: boolean;
         message: string;
         traceId: string;
-        validation: import("@flowscope/shared").ValidationResult;
+        validation: import("../types").ValidationResult;
         warnings: string[];
     }>;
     /**
@@ -25,7 +25,7 @@ export declare class TracesController {
         batchId: string;
         processedCount: number;
         failedCount: number;
-        validation: import("@flowscope/shared").ValidationResult;
+        validation: import("../types").ValidationResult;
         results: {
             traceId: string;
             success: boolean;
@@ -43,7 +43,7 @@ export declare class TracesController {
         failedCount: number;
         results: {
             success: boolean;
-            validation: import("@flowscope/shared").ValidationResult;
+            validation: import("../types").ValidationResult;
             processedTrace?: UniversalTraceData;
             error?: string;
             traceId: string;

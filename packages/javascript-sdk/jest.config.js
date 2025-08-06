@@ -14,7 +14,4 @@ module.exports = {
     '!src/**/*.d.ts',
     '!src/examples/**',
   ],
-  moduleNameMapper: {
-    '^@flowscope/shared$': '<rootDir>/../shared/src',
-  },
 };

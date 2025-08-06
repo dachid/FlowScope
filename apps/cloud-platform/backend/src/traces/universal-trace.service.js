@@ -8,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UniversalTraceService = void 0;
 const common_1 = require("@nestjs/common");
-const shared_1 = require("@flowscope/shared");
+const shared_1 = require("../utils");
 let UniversalTraceService = class UniversalTraceService {
     constructor() {
         this.validator = shared_1.traceValidator;

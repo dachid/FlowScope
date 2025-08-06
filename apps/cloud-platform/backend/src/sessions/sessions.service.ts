@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import type { Session, TraceData, SessionStatus, TraceStatus, TraceEventType } from '@flowscope/shared';
+import type { Session, TraceData, SessionStatus, TraceStatus, TraceEventType } from '../types';
 
 @Injectable()
 export class SessionsService {

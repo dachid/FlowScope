@@ -1,6 +1,6 @@
 import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import type { TraceData } from '@flowscope/shared';
+import type { TraceData } from '../types';
 export declare class DebugWebSocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     server: Server;
     private readonly logger;

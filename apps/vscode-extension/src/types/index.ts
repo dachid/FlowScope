@@ -3,16 +3,48 @@
 
 export interface TraceData {
   id: string;
+  sessionId?: string;
+  parentId?: string;
   operation: string;
-  startedAt: Date;
-  completedAt?: Date;
-  durationMs?: number;
-  status: 'pending' | 'success' | 'error' | 'timeout';
+  language: string;
   framework: string;
-  modelName?: string;
-  sourceFile?: string;
-  sourceLine?: number;
-  metadata?: Record<string, any>;
+  startTime: number;
+  endTime?: number;
+  duration?: number;
+  data: any;
+  metadata?: any;
+  status: 'pending' | 'success' | 'error';
+  error?: string;
+  workspacePath?: string;
+  sourceLocation?: {
+    file: string;
+    line: number;
+    column?: number;
+  };
+}
+
+export interface HealthResponse {
+  status: string;
+  version: string;
+  mode: string;
+  timestamp: string;
+}
+
+export interface FlowScopeApiClient {
+  health(): Promise<HealthResponse>;
+  addTrace(trace: TraceData): Promise<void>;
+  updateTrace(traceId: string, updates: Partial<TraceData>): Promise<void>;
+  getTraces(sessionId?: string, limit?: number, offset?: number): Promise<TraceData[]>;
+  getTrace(traceId: string): Promise<TraceData | null>;
+  setWorkspace(workspacePath: string): Promise<void>;
+  focusTrace(traceId: string): Promise<void>;
+  createSession(name: string, workspacePath?: string): Promise<string>;
+  isDesktopAppConnected(): boolean;
+  openDesktopApp(): Promise<void>;
+  onTracesUpdated(callback: (traces: TraceData[]) => void): void;
+  getBookmarks(): Promise<any[]>;
+  getPromptVersions(): Promise<any[]>;
+  dispose(): void;
 }
 
 export interface VSCodeExtensionConfig {

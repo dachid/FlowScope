@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { FlowScopeApiClient } from '../services/apiClient';
+import { FlowScopeApiClient } from '../types';
 
 export class FlowScopeWebviewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'flowscope.debugger';
