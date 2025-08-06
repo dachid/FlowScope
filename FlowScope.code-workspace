@@ -1,0 +1,63 @@
+{
+  "folders": [
+    {
+      "name": "FlowScope Root",
+      "path": "."
+    }
+  ],
+  "settings": {
+    // Disable file restoration and recovery
+    "files.hotExit": "off",
+    "workbench.editor.restoreViewState": false,
+    "workbench.startup.editor": "none",
+    "window.restoreWindows": "none",
+    "window.restoreFullscreen": false,
+    
+    // Disable extension restore participants
+    "extensions.experimental.affinity": {},
+    
+    // Git settings to prevent unwanted restorations
+    "git.enableSmartCommit": false,
+    "git.confirmSync": true,
+    "git.autofetch": false,
+    "git.restoreViewState": false,
+    
+    // File watching and deletion settings
+    "workbench.editor.closeOnFileDelete": true,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    
+    // Search and exclude patterns
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/coverage": true,
+      "**/*.log": true
+    },
+    
+    // File watcher exclusions
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/*/**": true,
+      "**/.hg/store/**": true,
+      "**/dist/**": true,
+      "**/build/**": true,
+      "**/coverage/**": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.vscode-typescript-next",
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-eslint"
+    ]
+  }
+}

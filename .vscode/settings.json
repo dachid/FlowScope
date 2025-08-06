@@ -1,0 +1,42 @@
+{
+  // Disable automatic file restoration and recovery features
+  "files.hotExit": "off",
+  "workbench.editor.restoreViewState": false,
+  "workbench.startup.editor": "none",
+  
+  // Disable workspace restore participants
+  "extensions.experimental.affinity": {},
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  
+  // Disable backup and recovery features
+  "files.autoSave": "off",
+  "files.enableTrash": true,
+  
+  // Git and source control settings to prevent restoration
+  "git.enableSmartCommit": false,
+  "git.confirmSync": true,
+  "git.autofetch": false,
+  "git.restoreViewState": false,
+  
+  // Disable session restoration
+  "window.restoreWindows": "none",
+  "window.restoreFullscreen": false,
+  
+  // Disable extension restoration behaviors
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  
+  // File watcher settings
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/.hg/store/**": true
+  },
+  
+  // Prevent automatic workspace folder restoration
+  "workbench.editor.closeOnFileDelete": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false
+}
