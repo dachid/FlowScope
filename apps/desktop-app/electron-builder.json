@@ -1,0 +1,180 @@
+{
+  "productName": "FlowScope Desktop",
+  "appId": "com.flowscope.desktop",
+  "directories": {
+    "output": "../../dist/packages",
+    "buildResources": "build"
+  },
+  "files": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "assets/",
+      "to": "assets/",
+      "filter": ["**/*"]
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "build/icon.ico",
+    "requestedExecutionLevel": "asInvoker",
+    "publisherName": "FlowScope Team",
+    "verifyUpdateCodeSignature": false,
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "FlowScope Desktop",
+    "include": "build/installer.nsh",
+    "artifactName": "${productName}-Setup-${version}.${ext}",
+    "deleteAppDataOnUninstall": false,
+    "menuCategory": "Development"
+  },
+  "portable": {
+    "artifactName": "${productName}-${version}-Portable.${ext}"
+  },
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "build/icon.icns",
+    "category": "public.app-category.developer-tools",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "entitlements": "build/entitlements.mac.plist",
+    "entitlementsInherit": "build/entitlements.mac.plist",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "minimumSystemVersion": "10.15.0",
+    "extendInfo": {
+      "NSCameraUsageDescription": "FlowScope needs camera access for QR code scanning features.",
+      "NSMicrophoneUsageDescription": "FlowScope needs microphone access for voice notes and recordings.",
+      "NSDocumentsFolderUsageDescription": "FlowScope needs access to save and load session files."
+    }
+  },
+  "dmg": {
+    "background": "build/background.tiff",
+    "iconSize": 100,
+    "contents": [
+      {
+        "x": 410,
+        "y": 150,
+        "type": "link",
+        "path": "/Applications"
+      },
+      {
+        "x": 130,
+        "y": 150,
+        "type": "file"
+      }
+    ],
+    "window": {
+      "width": 540,
+      "height": 380
+    },
+    "artifactName": "${productName}-${version}.${ext}"
+  },
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "deb",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "rpm",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "tar.gz",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "build/icons/",
+    "category": "Development",
+    "description": "A powerful desktop application for visualizing and debugging LLM application traces",
+    "vendor": "FlowScope Team",
+    "maintainer": "FlowScope Team <team@flowscope.dev>",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "synopsis": "LLM Application Trace Visualization and Debugging Tool",
+    "desktop": {
+      "Name": "FlowScope Desktop",
+      "Comment": "Visualize and debug LLM application traces",
+      "Categories": "Development;Debugger;IDE;",
+      "Keywords": "llm;ai;debugging;tracing;visualization;",
+      "StartupWMClass": "flowscope-desktop"
+    }
+  },
+  "appImage": {
+    "artifactName": "${productName}-${version}.${ext}"
+  },
+  "deb": {
+    "priority": "optional",
+    "depends": ["gconf2", "gconf-service", "libnotify4", "libappindicator1", "libxtst6", "libnss3"],
+    "artifactName": "${productName}-${version}.${ext}"
+  },
+  "rpm": {
+    "depends": ["libXScrnSaver", "libxtst6"],
+    "artifactName": "${productName}-${version}.${ext}"
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "dachid",
+      "repo": "FlowScope",
+      "private": false,
+      "releaseType": "release"
+    }
+  ],
+  "buildVersion": "1.0.0",
+  "compression": "maximum",
+  "removePackageScripts": true,
+  "nodeGypRebuild": false,
+  "buildDependenciesFromSource": false,
+  "npmRebuild": false,
+  "artifactBuildCompleted": "build/notarize.js",
+  "afterSign": "build/notarize.js",
+  "protocols": [
+    {
+      "name": "FlowScope Protocol",
+      "schemes": ["flowscope"]
+    }
+  ],
+  "fileAssociations": [
+    {
+      "ext": "flowscope",
+      "name": "FlowScope Session File",
+      "description": "FlowScope debugging session file",
+      "icon": "build/fileicon.ico",
+      "role": "Editor"
+    }
+  ],
+  "asarUnpack": [
+    "node_modules/better-sqlite3/**/*"
+  ]
+}

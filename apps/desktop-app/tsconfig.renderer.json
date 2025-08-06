@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/renderer",
+    "baseUrl": "./src/renderer",
+    "jsx": "react-jsx",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"]
+  },
+  "include": [
+    "src/renderer/**/*",
+    "src/shared/**/*"
+  ],
+  "exclude": [
+    "src/main/**/*"
+  ]
+}

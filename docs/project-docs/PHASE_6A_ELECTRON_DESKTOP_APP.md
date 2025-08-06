@@ -313,41 +313,43 @@ class VSCodeExtensionInstaller {
 - [ ] Add data import/export functionality
 
 #### **Day 3-4: Local API Server**
-- [ ] Build Express.js API server in main process
-- [ ] Implement trace ingestion endpoints
-- [ ] Add session management APIs
-- [ ] Set up WebSocket for real-time updates
-- [ ] Test API with existing SDK traces
+- [x] Build Express.js API server in main process
+- [x] Implement trace ingestion endpoints
+- [x] Add session management APIs
+- [x] Set up WebSocket for real-time updates
+- [x] Test API with existing SDK traces
 
 #### **Day 5: Basic UI Framework**
-- [ ] Set up React frontend in renderer process
-- [ ] Create main application layout
-- [ ] Implement basic session tree view
-- [ ] Add trace list component
-- [ ] Set up state management (Redux/Zustand)
+- [x] Set up React frontend in renderer process
+- [x] Create main application layout
+- [x] Implement basic session tree view
+- [x] Add trace list component
+- [x] Set up state management (Redux/Zustand)
 
 ### **Week 12: Rich Visualization (Days 6-10)**
 
 #### **Day 6-7: Trace Visualization Engine**
-- [ ] Build interactive timeline component
-- [ ] Implement trace flow diagram
-- [ ] Add performance charts and metrics
-- [ ] Create trace detail panels
-- [ ] Implement zoom and filtering
+- [x] Build interactive timeline component
+- [x] Implement trace flow diagram
+- [x] Add performance charts and metrics
+- [x] Create trace detail panels
+- [x] Implement zoom and filtering
 
 #### **Day 8-9: VS Code Integration**
-- [ ] Build VS Code detection service
-- [ ] Implement extension auto-installer
-- [ ] Create companion mode API
-- [ ] Add jump-to-code functionality
-- [ ] Test integration workflow
+- [x] Build VS Code detection service
+- [x] Implement extension auto-installer
+- [x] Create companion mode API
+- [x] Add jump-to-code functionality
+- [x] Test integration workflow
+- [x] Handle missing extension gracefully
+- [ ] Publish VS Code extension to marketplace
 
 #### **Day 10: Polish and Packaging**
-- [ ] Implement auto-updater
-- [ ] Add native menu items and shortcuts
-- [ ] Create installer packages for all platforms
-- [ ] Performance optimization and testing
-- [ ] Documentation and user guides
+- [x] Implement auto-updater
+- [x] Add native menu items and shortcuts
+- [x] Create installer packages for all platforms
+- [x] Performance optimization and testing
+- [x] Documentation and user guides
 
 ---
 

@@ -9,3 +9,5 @@ taskkill /F /IM node.exe
 Stop-Process -Name "node" -Force; npm run dev
 
 npx prisma studio --schema="C:\Users\charlesidu\Downloads\FlowScope\packages\backend\prisma\schema.prisma"
+
+C:\Users\charlesidu\Downloads\FlowScope\apps\desktop-app
